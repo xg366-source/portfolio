@@ -2,6 +2,12 @@
 
 极简画廊风作品集网站，由 AI 从 PDF 作品集直接生成。
 
+## 线上地址
+
+**https://xg366-source.github.io/portfolio/**
+
+部署在 GitHub Pages（仓库：`xg366-source/portfolio`）。本地修改后推送 `main` 分支即可自动更新。
+
 ## 目录结构
 
 ```
