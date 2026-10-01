@@ -1,0 +1,1265 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="AI 作品集点评助手（公开版）：PDF 作品集 Top3 点评，附页码证据、具体改法与置信度。访客自填 DeepSeek API Key，无 Key 时为演示模式。" />
+    <!-- Empty inline icon: stops the browser fetching /favicon.ico, which
+         lives outside the artifact's routes and 404s. -->
+    <link rel="icon" href="data:," />
+    <title>AI 作品集点评助手 · 公开版</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #eaf2f5;
+        --paper: #fffdf7;
+        --surface: #ffffff;
+        --surface-2: #dbe8ed;
+        --ink: #1e2430;
+        --text: #1e2430;
+        --dim: #5b6470;
+        --border: #1e2430;
+        --accent: #ff6b4a;
+        --coral: #ff6b4a;
+        --blue: #2456f5;
+        --blue-soft: #c9dafd;
+        --green: #78c850;
+        --yellow: #f4c542;
+        --shadow: #1e2430;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --bg: #151a22;
+          --paper: #252b35;
+          --surface: #202630;
+          --surface-2: #2f3946;
+          --ink: #f5f3ea;
+          --text: #f5f3ea;
+          --dim: #bac1c9;
+          --border: #f5f3ea;
+          --blue-soft: #284573;
+          --shadow: #07090c;
+        }
+      }
+      * { box-sizing: border-box; }
+      [hidden] { display: none !important; }
+      html { background: var(--bg); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+      body { margin: 0; min-width: 320px; color: var(--text); background: var(--bg); }
+      button, input { font: inherit; }
+      button { color: inherit; }
+      button:focus-visible, input:focus-visible, label:has(input:focus-visible) { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+      .app-shell {
+        min-height: 100vh;
+        background-color: var(--bg);
+        background-image: radial-gradient(color-mix(in srgb, var(--ink) 13%, transparent) 1px, transparent 1px);
+        background-size: 18px 18px;
+        overflow-x: hidden;
+      }
+
+      .topbar {
+        min-height: 68px;
+        padding: max(12px, env(safe-area-inset-top)) 18px 8px;
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 8px;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+      .brand-mark {
+        border: 0;
+        background: transparent;
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+        cursor: pointer;
+        padding: 5px 0;
+        font-family: ui-rounded, "Avenir Next Rounded", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 16px;
+      }
+      .brand-mark span:first-child { color: var(--coral); font-size: 26px; }
+      .brand-mark i { color: var(--blue); font-style: normal; }
+      .brand-mark span:last-child { font-size: 13px; }
+      .topbar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        padding: 7px 11px;
+        font-size: 12px;
+        font-weight: 900;
+        box-shadow: 3px 3px 0 var(--shadow);
+        letter-spacing: .01em;
+      }
+      .status-pill .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ink); }
+      .status-pill.demo { background: var(--yellow); }
+      .status-pill.live { background: var(--green); }
+
+      .history-button {
+        border: 2px solid var(--ink);
+        background: var(--paper);
+        border-radius: 999px;
+        padding: 8px 12px;
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        font-weight: 800;
+        font-size: 13px;
+        box-shadow: 3px 3px 0 var(--shadow);
+        cursor: pointer;
+      }
+      .history-button svg, .delete-button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+      .compose-layout {
+        width: min(1120px, calc(100% - 28px));
+        margin: 22px auto 0;
+        padding-bottom: max(36px, env(safe-area-inset-bottom));
+        display: grid;
+        gap: 30px;
+      }
+      .hero-copy { padding: 10px 3px 0; }
+      .scribble {
+        display: inline-block;
+        transform: rotate(-2deg);
+        padding: 7px 11px;
+        background: var(--yellow);
+        border: 2px solid var(--ink);
+        box-shadow: 3px 3px 0 var(--shadow);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .06em;
+      }
+      .hero-copy h1 {
+        margin: 24px 0 16px;
+        font-family: ui-rounded, "Avenir Next Rounded", system-ui, sans-serif;
+        font-size: clamp(42px, 12vw, 76px);
+        line-height: .98;
+        letter-spacing: -.06em;
+        max-width: 720px;
+      }
+      .hero-copy h1 em { color: var(--coral); font-style: normal; position: relative; white-space: nowrap; }
+      .hero-copy h1 em::after { content: ""; position: absolute; height: 7px; background: var(--blue); left: 2px; right: 0; bottom: -3px; transform: rotate(-1deg); border-radius: 30%; }
+      .hero-copy > p { max-width: 580px; margin: 0; font-size: 16px; line-height: 1.75; color: var(--dim); font-weight: 650; }
+      .promise-strip { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 22px; }
+      .promise-strip span { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; }
+      .promise-strip b { width: 24px; height: 24px; display: grid; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--green); font-size: 11px; }
+
+      .workbench {
+        position: relative;
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        box-shadow: 7px 7px 0 var(--shadow);
+        padding: 22px 17px 18px;
+        border-radius: 8px 20px 8px 8px;
+      }
+      .paper-tab { position: absolute; top: -18px; right: 20px; background: var(--blue); color: white; border: 3px solid var(--ink); padding: 6px 13px; transform: rotate(2deg); font: 900 11px/1 ui-rounded, system-ui; letter-spacing: .09em; }
+      .drop-zone { min-height: 240px; border: 3px dashed var(--ink); background: color-mix(in srgb, var(--blue-soft) 55%, var(--paper)); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 18px; text-align: center; cursor: pointer; transition: background-color .18s ease, transform .18s ease; }
+      .drop-zone.is-dragging { background: var(--yellow); transform: translateY(-2px); }
+      .drop-zone.has-file { background: color-mix(in srgb, var(--green) 22%, var(--paper)); }
+      .drop-zone input { display: none; }
+      .folder-sketch { width: 154px; height: auto; margin-bottom: 8px; }
+      .drop-zone strong { font: 900 19px/1.2 ui-rounded, "Avenir Next Rounded", system-ui, sans-serif; }
+      .drop-zone > span:not(.choose-chip) { margin-top: 6px; color: var(--dim); font-size: 12px; overflow-wrap: anywhere; }
+      .choose-chip { margin-top: 12px; background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; padding: 7px 13px; font-size: 12px; font-weight: 900; box-shadow: 2px 2px 0 var(--shadow); }
+      .field-group, .text-field, .deadline-field { margin-top: 20px; }
+      .field-label, .text-field > span { display: block; margin-bottom: 9px; font-size: 13px; font-weight: 900; }
+      .segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .segmented button { min-height: 48px; border: 2px solid var(--ink); background: var(--surface); font-weight: 900; cursor: pointer; }
+      .segmented button:first-child { border-radius: 13px 5px 5px 13px; }
+      .segmented button:last-child { border-radius: 5px 13px 13px 5px; }
+      .segmented button.active { background: var(--blue); color: #fff; box-shadow: 3px 3px 0 var(--shadow); transform: translate(-1px, -1px); }
+      .text-field input { width: 100%; min-height: 49px; border: 2px solid var(--ink); border-radius: 8px; background: var(--surface); padding: 11px 13px; color: var(--text); }
+      .text-field input::placeholder { color: var(--dim); }
+      .deadline-field { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 800; }
+      .deadline-field input { width: 75px; height: 44px; border: 2px solid var(--ink); border-radius: 8px; background: var(--surface); color: var(--text); text-align: center; font-weight: 900; }
+      .urgent-note { margin-top: 14px; border: 2px solid var(--ink); background: var(--yellow); padding: 10px 12px; display: grid; gap: 2px; transform: rotate(-.4deg); font-size: 12px; }
+      .error-message { margin: 14px 0 0; padding: 10px 12px; border: 2px solid var(--ink); background: color-mix(in srgb, var(--coral) 25%, var(--paper)); font-size: 13px; font-weight: 800; }
+
+      .mode-banner { margin-top: 16px; border: 2px solid var(--ink); padding: 12px; transform: rotate(-.4deg); font-size: 12px; display: grid; gap: 7px; }
+      .mode-banner.demo { background: var(--yellow); }
+      .mode-banner.live { background: color-mix(in srgb, var(--green) 28%, var(--paper)); }
+      .mode-banner b { font-size: 13px; }
+      .key-cta { justify-self: start; border: 2px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 8px 13px; font-weight: 900; box-shadow: 2px 2px 0 var(--shadow); cursor: pointer; font-size: 12px; }
+      .key-cta:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow); }
+
+      .primary-button { margin-top: 20px; width: 100%; min-height: 54px; border: 3px solid var(--ink); border-radius: 9px; background: var(--coral); color: #1e2430; box-shadow: 5px 5px 0 var(--shadow); display: flex; justify-content: space-between; align-items: center; padding: 0 18px; font-weight: 950; cursor: pointer; }
+      .primary-button:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--shadow); }
+      .primary-button svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .sample-link { display: inline-block; margin: 12px 2px 0; border: 0; background: transparent; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; font-weight: 800; font-size: 13px; cursor: pointer; }
+      .privacy-line { margin: 13px 2px 0; color: var(--dim); font-size: 11px; line-height: 1.5; }
+      .privacy-line.warn { color: var(--coral); font-weight: 800; }
+
+      .processing-view { min-height: calc(100vh - 68px); width: min(760px, calc(100% - 32px)); margin: 0 auto; padding: 55px 0 70px; display: grid; justify-items: center; align-content: center; gap: 35px; }
+      .scan-stack { position: relative; width: 220px; height: 260px; }
+      .sheet { position: absolute; width: 162px; height: 224px; border: 4px solid var(--ink); background: var(--paper); left: 29px; top: 15px; }
+      .sheet-back { transform: rotate(8deg); background: var(--yellow); }
+      .sheet-front { transform: rotate(-3deg); box-shadow: 8px 8px 0 var(--shadow); overflow: hidden; }
+      .sheet-front span { position: absolute; top: 12px; right: 12px; border: 2px solid var(--ink); background: var(--blue-soft); padding: 4px 7px; font-weight: 900; font-size: 12px; }
+      .sheet-front::before, .sheet-front::after, .sheet-front i { content: ""; position: absolute; left: 18px; right: 18px; height: 5px; background: var(--ink); border-radius: 4px; }
+      .sheet-front::before { top: 67px; }
+      .sheet-front::after { top: 88px; right: 48px; }
+      .sheet-front i { top: 124px; height: 64px; background: var(--blue-soft); border: 3px solid var(--ink); border-radius: 5px; }
+      .scanner-line { position: absolute; left: 8px; right: 8px; height: 8px; background: var(--coral); border: 3px solid var(--ink); box-shadow: 0 5px 0 color-mix(in srgb, var(--coral) 30%, transparent); z-index: 3; transition: top .25s ease; }
+      .progress-copy { text-align: center; width: 100%; }
+      .counter { display: inline-grid; place-items: center; min-width: 64px; height: 40px; padding: 0 9px; border: 3px solid var(--ink); background: var(--green); box-shadow: 4px 4px 0 var(--shadow); transform: rotate(-2deg); font-weight: 950; }
+      .progress-copy h1 { margin: 21px 0 8px; font: 950 clamp(30px, 8vw, 46px)/1.05 ui-rounded, "Avenir Next Rounded", system-ui, sans-serif; letter-spacing: -.04em; }
+      .progress-copy p { margin: 0 auto; color: var(--dim); max-width: 460px; font-weight: 650; }
+      .progress-track { margin: 25px auto 0; max-width: 450px; height: 18px; border: 3px solid var(--ink); background: var(--paper); padding: 2px; transform: rotate(.5deg); }
+      .progress-track span { display: block; height: 100%; background: var(--blue); transition: width .3s ease; }
+
+      .report-layout { width: min(1180px, calc(100% - 28px)); margin: 12px auto 0; padding: 0 0 max(48px, env(safe-area-inset-bottom)); display: grid; gap: 18px; }
+      .report-intro { padding-top: 7px; }
+      .back-link { border: 0; background: transparent; padding: 4px 0; color: var(--dim); font-weight: 850; cursor: pointer; }
+      .report-meta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .report-meta span { border: 2px solid var(--ink); border-radius: 999px; padding: 5px 9px; background: var(--paper); font-size: 11px; font-weight: 850; }
+      .report-meta span:first-child { background: var(--yellow); }
+      .report-meta span.demo-chip { background: var(--yellow); }
+      .report-intro h1 { margin: 17px 0 9px; font: 950 clamp(38px, 10vw, 62px)/1 ui-rounded, "Avenir Next Rounded", system-ui, sans-serif; letter-spacing: -.05em; }
+      .report-intro h1 em { font-style: normal; color: var(--coral); }
+      .report-intro > p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.65; font-weight: 650; }
+      .deadline-banner { margin-top: 15px; background: var(--yellow); border: 2px solid var(--ink); padding: 10px 12px; font-size: 12px; }
+      .demo-ribbon { margin-top: 15px; background: var(--yellow); border: 2px solid var(--ink); padding: 12px; font-size: 12px; display: grid; gap: 8px; transform: rotate(-.5deg); }
+      .demo-ribbon b { font-size: 13px; }
+      .finding-index { display: grid; gap: 9px; margin-top: 25px; }
+      .finding-index button { width: 100%; border: 2px solid var(--ink); background: var(--surface); min-height: 64px; display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 8px 10px; text-align: left; cursor: pointer; }
+      .finding-index button:nth-child(1) { border-radius: 15px 5px 7px 8px; }
+      .finding-index button:nth-child(2) { border-radius: 6px 15px 5px 10px; }
+      .finding-index button:nth-child(3) { border-radius: 10px 6px 14px 5px; }
+      .finding-index button.active { background: var(--blue); color: #fff; box-shadow: 4px 4px 0 var(--shadow); transform: translate(-2px, -2px); }
+      .finding-index b { font: 950 20px/1 ui-rounded, system-ui; }
+      .finding-index span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 850; }
+      .finding-index i { font-style: normal; font-size: 11px; font-weight: 900; border: 1.5px solid currentColor; border-radius: 999px; padding: 4px 7px; }
+
+      .finding-detail { background: var(--paper); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--shadow); padding: 18px; border-radius: 7px 18px 8px 10px; }
+      .detail-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+      .detail-head > div { display: flex; flex-wrap: wrap; gap: 7px; }
+      .priority, .category, .confidence { display: inline-block; border: 2px solid var(--ink); border-radius: 999px; padding: 5px 8px; font-size: 10px; font-weight: 950; }
+      .priority.high { background: var(--coral); }
+      .priority.medium { background: var(--yellow); }
+      .priority.low { background: var(--green); }
+      .category { background: var(--surface); }
+      .confidence.high { background: var(--green); }
+      .confidence.medium { background: var(--yellow); }
+      .confidence.uncertain { background: var(--blue-soft); }
+      .finding-detail h2 { margin: 19px 0 18px; font: 950 clamp(24px, 7vw, 36px)/1.18 ui-rounded, "Avenir Next Rounded", system-ui, sans-serif; letter-spacing: -.035em; }
+      .page-evidence { display: grid; gap: 15px; }
+      .page-preview { position: relative; min-height: 220px; background: var(--surface-2); border: 2px solid var(--ink); display: grid; place-items: center; overflow: hidden; }
+      .page-preview img { display: block; width: 100%; height: 100%; max-height: 430px; object-fit: contain; background: #fff; }
+      .page-pin { position: absolute; top: 9px; right: 9px; padding: 5px 8px; border: 2px solid var(--ink); background: var(--coral); color: #1e2430; font-size: 11px; font-weight: 950; box-shadow: 2px 2px 0 var(--shadow); }
+      .preview-placeholder { min-height: 220px; display: grid; place-items: center; align-content: center; gap: 8px; color: var(--dim); text-align: center; padding: 12px; }
+      .preview-placeholder b { color: var(--ink); font: 950 38px/1 ui-rounded, system-ui; }
+      .preview-placeholder span { font-size: 11px; }
+      .evidence-copy, .action-note, .scope-note { padding: 15px; border: 2px solid var(--ink); }
+      .evidence-copy { background: var(--blue-soft); }
+      .action-note { margin-top: 14px; background: color-mix(in srgb, var(--green) 22%, var(--paper)); }
+      .scope-note { margin-top: 14px; background: var(--surface); display: grid; gap: 5px; font-size: 12px; }
+      .mini-label { display: block; font-size: 10px; letter-spacing: .08em; font-weight: 950; margin-bottom: 8px; }
+      .evidence-copy p, .action-note p, .scope-note p, .scope-note span { margin: 0; line-height: 1.65; font-weight: 650; }
+      .action-meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
+      .action-meta span { border: 1.5px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 4px 7px; font-size: 10px; font-weight: 850; }
+      .detail-nav { margin-top: 17px; display: flex; justify-content: space-between; align-items: center; }
+      .detail-nav button { border: 2px solid var(--ink); background: var(--surface); border-radius: 8px; padding: 8px 12px; font-weight: 850; cursor: pointer; }
+      .detail-nav button:disabled { opacity: .35; cursor: default; }
+      .detail-nav span { font-size: 12px; font-weight: 900; }
+      .report-boundary { display: grid; gap: 12px; align-content: start; }
+      .report-boundary > div { background: var(--surface); border: 2px solid var(--ink); padding: 14px; }
+      .report-boundary b { font-size: 12px; }
+      .report-boundary p { margin: 6px 0 0; color: var(--dim); font-size: 12px; line-height: 1.55; }
+      .human-check { padding: 12px; background: var(--yellow); border: 2px solid var(--ink); color: var(--ink) !important; font-weight: 850; transform: rotate(-.5deg); }
+      .loading-report, .empty-report { min-height: 60vh; display: grid; place-items: center; align-content: center; text-align: center; gap: 14px; }
+      .empty-report button { border: 2px solid var(--ink); background: var(--yellow); padding: 10px 14px; box-shadow: 3px 3px 0 var(--shadow); }
+
+      .drawer-backdrop { position: fixed; inset: 0; z-index: 40; background: rgba(12, 16, 22, .45); display: flex; justify-content: flex-end; }
+      .history-drawer { width: min(420px, 92vw); height: 100%; background: var(--bg); border-left: 3px solid var(--ink); padding: max(18px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); box-shadow: -8px 0 0 color-mix(in srgb, var(--ink) 25%, transparent); overflow-y: auto; }
+      .drawer-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+      .drawer-head span { font-size: 10px; font-weight: 950; letter-spacing: .14em; color: var(--blue); }
+      .drawer-head h2 { margin: 3px 0 0; font: 950 30px/1 ui-rounded, system-ui; }
+      .drawer-head button { width: 38px; height: 38px; border: 2px solid var(--ink); background: var(--coral); border-radius: 50%; font-size: 25px; line-height: 1; cursor: pointer; }
+      .drawer-note { font-size: 11px; color: var(--dim); line-height: 1.6; margin: -8px 0 14px; }
+      .history-list { display: grid; gap: 12px; }
+      .history-item { border: 2px solid var(--ink); background: var(--paper); display: grid; grid-template-columns: minmax(0, 1fr) 46px; box-shadow: 4px 4px 0 var(--shadow); }
+      .history-main { min-width: 0; border: 0; background: transparent; padding: 13px; text-align: left; cursor: pointer; display: grid; gap: 4px; }
+      .history-mode { font-size: 10px; font-weight: 950; color: var(--blue); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+      .badge-demo { font-size: 9px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--yellow); color: var(--ink); padding: 2px 6px; letter-spacing: .04em; }
+      .history-main strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .history-main small { color: var(--dim); }
+      .delete-button { border: 0; border-left: 2px solid var(--ink); background: transparent; display: grid; place-items: center; cursor: pointer; }
+      .delete-button:hover { background: color-mix(in srgb, var(--coral) 25%, transparent); }
+      .drawer-empty { min-height: 230px; border: 2px dashed var(--ink); display: grid; place-items: center; align-content: center; gap: 5px; text-align: center; color: var(--dim); }
+      .drawer-empty b { color: var(--text); }
+      .drawer-empty span { font-size: 12px; }
+      .drawer-foot { display: flex; justify-content: flex-end; margin-top: 16px; }
+      .history-clear { border: 2px solid var(--ink); background: var(--surface); border-radius: 999px; padding: 7px 12px; font-size: 12px; font-weight: 900; cursor: pointer; box-shadow: 2px 2px 0 var(--shadow); }
+      .history-clear.arming { background: var(--coral); color: #1e2430; }
+
+      .modal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(12, 16, 22, .5); display: flex; align-items: center; justify-content: center; padding: 18px; }
+      .key-modal { position: relative; width: min(540px, 94vw); max-height: 92vh; overflow-y: auto; background: var(--paper); border: 3px solid var(--ink); box-shadow: 7px 7px 0 var(--shadow); border-radius: 8px 20px 8px 8px; padding: 22px 20px; }
+      .modal-close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border: 2px solid var(--ink); background: var(--coral); border-radius: 50%; font-size: 22px; line-height: 1; cursor: pointer; }
+      .key-modal h2 { margin: 2px 0 6px; font: 950 28px/1.1 ui-rounded, "Avenir Next Rounded", system-ui, sans-serif; letter-spacing: -.02em; }
+      .key-sub { margin: 0 0 16px; color: var(--dim); font-size: 13px; font-weight: 700; }
+      .key-status { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; font-size: 13px; font-weight: 850; }
+      .key-status .chip { border: 2px solid var(--ink); border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 950; }
+      .key-status .chip.on { background: var(--green); }
+      .key-status .chip.off { background: var(--surface-2); }
+      .key-status code { font-size: 12px; }
+      .key-field > span, .model-field > span { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 900; }
+      .key-row { display: flex; gap: 8px; }
+      .key-row input { flex: 1; min-width: 0; min-height: 46px; border: 2px solid var(--ink); border-radius: 8px; background: var(--surface); padding: 10px 12px; color: var(--text); }
+      .toggle-eye { border: 2px solid var(--ink); background: var(--surface); border-radius: 8px; padding: 0 12px; font-weight: 850; cursor: pointer; font-size: 13px; }
+      .key-hint { font-size: 11px; color: var(--dim); font-weight: 650; margin: 7px 0 0; line-height: 1.55; }
+      .model-field { margin-top: 16px; }
+      .model-field .key-row input { min-height: 42px; }
+      .model-reset { border: 0; background: transparent; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; font-size: 11px; font-weight: 800; cursor: pointer; padding: 0 4px; }
+      .key-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+      .save-key { flex: 1 1 160px; min-height: 50px; border: 3px solid var(--ink); border-radius: 9px; background: var(--green); color: var(--ink); font-weight: 950; box-shadow: 4px 4px 0 var(--shadow); cursor: pointer; }
+      .save-key:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--shadow); }
+      .delete-key { min-height: 50px; border: 3px solid var(--ink); border-radius: 9px; background: var(--surface); font-weight: 850; cursor: pointer; }
+      .key-steps { margin-top: 18px; border-top: 2px dashed var(--ink); padding-top: 14px; }
+      .key-steps > span { font-size: 12px; font-weight: 950; letter-spacing: .04em; }
+      .key-steps ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 9px; font-size: 13px; font-weight: 650; line-height: 1.6; color: var(--text); }
+      .key-steps a { color: var(--blue); font-weight: 900; }
+      .key-note { margin-top: 16px; border: 2px solid var(--ink); background: color-mix(in srgb, var(--blue-soft) 60%, var(--paper)); padding: 10px 12px; font-size: 12px; line-height: 1.6; }
+      .key-warn { margin-top: 10px; padding: 10px 12px; border: 2px solid var(--ink); background: color-mix(in srgb, var(--coral) 22%, var(--paper)); font-size: 12px; font-weight: 800; }
+
+      .toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) rotate(-1deg); background: var(--ink); color: var(--paper); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--shadow); padding: 10px 18px; font-weight: 850; font-size: 13px; z-index: 80; border-radius: 6px 14px 6px 14px; max-width: 88vw; text-align: center; }
+
+      @media (min-width: 760px) {
+        .topbar { min-height: 82px; padding-inline: 28px; }
+        .compose-layout { margin-top: 42px; grid-template-columns: minmax(0, 1.05fr) minmax(360px, .75fr); gap: 64px; align-items: center; }
+        .hero-copy { padding-left: 18px; }
+        .hero-copy > p { font-size: 18px; }
+        .workbench { padding: 26px; }
+        .drop-zone { min-height: 260px; }
+        .folder-sketch { width: 178px; }
+        .processing-view { grid-template-columns: 260px minmax(0, 1fr); justify-items: start; gap: 60px; }
+        .progress-copy { text-align: left; }
+        .progress-track { margin-left: 0; }
+        .report-layout { margin-top: 32px; grid-template-columns: minmax(260px, .7fr) minmax(420px, 1.25fr); column-gap: 30px; }
+        .finding-detail { padding: 25px; }
+        .page-evidence { grid-template-columns: minmax(190px, .8fr) minmax(220px, 1fr); align-items: stretch; }
+        .evidence-copy { display: flex; flex-direction: column; justify-content: center; }
+        .report-boundary { grid-column: 1 / -1; grid-template-columns: 1fr 1fr 1fr; }
+        .report-boundary .human-check { margin: 0; }
+      }
+      @media (min-width: 1050px) {
+        .report-layout { grid-template-columns: 300px minmax(480px, 1fr) 240px; align-items: start; }
+        .report-intro { position: sticky; top: 20px; }
+        .report-boundary { grid-column: auto; grid-template-columns: 1fr; position: sticky; top: 20px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="brand-mark" id="brand" aria-label="开始新的点评"><span>3</span><i>/</i><span>页</span></button>
+        <div class="topbar-actions">
+          <span class="status-pill demo" id="status-pill" aria-live="polite"><span class="dot"></span><span id="status-text">演示模式 · 未填 Key</span></span>
+          <button class="history-button" id="key-btn" aria-label="API 设置"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="12" r="4"/><path d="M11 12h9m-4 0v4"/></svg><span>API 设置</span></button>
+          <button class="history-button" id="history-btn" aria-label="查看历史报告"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.5M4 4v4.5h4.5M12 8v5l3 2"/></svg><span>历史报告</span></button>
+        </div>
+      </header>
+      <div id="view"></div>
+    </div>
+    <div id="drawer-root"></div>
+    <div id="modal-root"></div>
+    <div id="toast-root"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+    (function () {
+      "use strict";
+      /* ============ 工具 ============ */
+      function esc(s) {
+        return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      function qs(sel, root) { return (root || document).querySelector(sel); }
+      function qsa(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+      function fmtDate(iso) {
+        try {
+          return new Intl.DateTimeFormat("zh-CN", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(iso));
+        } catch (e) { return String(iso); }
+      }
+      function uid(prefix) {
+        return prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+      }
+
+      /* ============ 常量与存储 ============ */
+      var API_ENDPOINT = "https://api.deepseek.com/chat/completions";
+      var DEFAULT_MODEL = "deepseek-flash";
+      var MAX_REPORTS = 20;
+      var LS_KEY = "ai3.deepseek_key";
+      var LS_MODEL = "ai3.deepseek_model";
+      var LS_REPORTS = "ai3.reports";
+
+      var store = {
+        broken: false,
+        get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { this.broken = true; return null; } },
+        set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) { this.broken = true; } },
+        del: function (k) { try { window.localStorage.removeItem(k); } catch (e) { /* ignore */ } }
+      };
+      var memReports = null; // 本地存储不可用时的会话级兜底
+
+      function getKey() { return (store.get(LS_KEY) || "").trim(); }
+      function setKey(v) { store.set(LS_KEY, v); }
+      function delKey() { store.del(LS_KEY); }
+      function getModel() { return (store.get(LS_MODEL) || DEFAULT_MODEL).trim() || DEFAULT_MODEL; }
+      function setModel(v) { store.set(LS_MODEL, v); }
+      function getReports() {
+        if (memReports !== null) return memReports;
+        try {
+          var raw = store.get(LS_REPORTS);
+          var arr = raw ? JSON.parse(raw) : [];
+          return Array.isArray(arr) ? arr : [];
+        } catch (e) { return []; }
+      }
+      function persistReports(arr) {
+        if (memReports !== null) { memReports = arr; return; }
+        store.set(LS_REPORTS, JSON.stringify(arr));
+        if (store.broken && memReports === null) memReports = arr;
+      }
+      function saveReportToHistory(review) {
+        var arr = getReports().filter(function (r) { return r && r.id !== review.id; });
+        arr.unshift(review);
+        if (arr.length > MAX_REPORTS) arr = arr.slice(0, MAX_REPORTS);
+        persistReports(arr);
+      }
+
+      /* ============ 文案工具 ============ */
+      function modeLabel(mode) { return mode === "application" ? "院校申请" : "设计求职"; }
+      function priorityLabel(p) { if (p === "high") return "优先改"; if (p === "medium") return "接着改"; return "有余力再改"; }
+      function effortLabel(e) { if (e === "small") return "约 15 分钟"; if (e === "medium") return "约 30–60 分钟"; return "需要较多时间"; }
+      function confidenceLabel(c) { if (c === "high") return "高置信"; if (c === "medium") return "中等置信"; return "无法充分判断"; }
+      function fileHint() {
+        if (!state.file) return "PDF · 最多读取前 12 页 · 20MB 以内";
+        return state.file.name + " · " + (state.file.size / 1024 / 1024).toFixed(1) + " MB";
+      }
+
+      /* ============ 图标与插画 ============ */
+      var FOLDER_SKETCH = '<svg viewBox="0 0 240 176" role="img" aria-label="打开的作品集文件夹插画" class="folder-sketch">' +
+        '<path d="M27 40h69l18 21h99v91H27z" fill="var(--yellow)" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round" />' +
+        '<path d="M43 54h156l15 99H27z" fill="var(--blue-soft)" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round" />' +
+        '<g transform="rotate(-4 120 95)"><rect x="65" y="26" width="118" height="100" rx="7" fill="var(--paper)" stroke="var(--ink)" stroke-width="5" />' +
+        '<path d="M83 48h56M83 63h76M83 78h44" stroke="var(--ink)" stroke-width="5" stroke-linecap="round" />' +
+        '<path d="M145 89l12 12 23-29" fill="none" stroke="var(--coral)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" /></g>' +
+        '<path d="M23 78h196l-19 80H42z" fill="var(--coral)" stroke="var(--ink)" stroke-width="6" stroke-linejoin="round" />' +
+        '<circle cx="191" cy="41" r="8" fill="var(--green)" stroke="var(--ink)" stroke-width="4" />' +
+        '<path d="M206 22l9-8M213 39h13M199 13V2" stroke="var(--ink)" stroke-width="4" stroke-linecap="round" /></svg>';
+      var ARROW_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>';
+      var TRASH_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V4h6v3M8 7l1 13h6l1-13" /></svg>';
+
+      /* ============ 状态 ============ */
+      var state = {
+        stage: "compose", file: null, mode: "application", audience: "", deadlineDays: 10,
+        error: "", pdfError: "", progress: 0, label: "正在拆解页面", review: null,
+        activeFinding: 0, previews: {}, historyOpen: false, keyOpen: false,
+        dragging: false, clearArmed: false, keyVisible: false
+      };
+
+      /* ============ 演示报告数据（页面内常量，明确标注） ============ */
+      var DEMO_SUMMARY = "这是演示报告：以下 3 条都是示例建议（已标注「示例」），并不针对你的文件，只用来展示点评的结构与写法——页码证据、具体改法与置信度。填入你的 DeepSeek API Key 后，这里会换成基于你作品集页面的真实分析。";
+      var DEMO_BOUNDARY = "演示内容只作展示，不要用来指导你的作品集；真实版点评也只是第一轮自检，不能替代导师或招聘方判断。";
+      var DEMO_COVERAGE = "演示报告：不针对任何实际文件。真实版最多分析前 12 页（页面截图在本地渲染，仅截图发往 DeepSeek）。";
+      var DEMO_SCOPE = "演示数据：这条是格式示例，不是对你文件的任何判断。";
+
+      function demoFindingsApplication() {
+        return [
+          { id: "df1", rank: 1, page_number: 4, priority: "high", category: "叙事逻辑", title: "（示例）关键决策页缺少「为什么这样设计」", evidence: "示例场景：这页用大轴测展示形态，但图面和边注都没有交代场地约束、流线如何把约束变成设计决策——评审只能看到结果，看不到思考过程。", action: "在决策页固定一个角落写一条「约束→决策」：每个主要形态旁边，用箭头把结论带回平面，文字只写一句话，说清是哪条约束决定了它。", effort: "small", confidence: "medium", scope_limit: DEMO_SCOPE, structural: false },
+          { id: "df2", rank: 2, page_number: 7, priority: "medium", category: "图文对应", title: "（示例）文字密集页的阅读顺序不清晰", evidence: "示例场景：这页的小字说明超过 3 段连续文字，和旁边的图纸没有编号对应；审稿人通常会直接跳过这类文字。", action: "把长说明压缩成边注：统一字级、关键术语加粗，文字和图纸用同一批圆圈编号双向对应，让「读图 = 读文」。", effort: "medium", confidence: "medium", scope_limit: DEMO_SCOPE, structural: false },
+          { id: "df3", rank: 3, page_number: 10, priority: "low", category: "项目连贯", title: "（示例）项目之间缺少转场页", evidence: "示例场景：项目 A 的收尾和项目 B 的封面直接相邻，读者没有收到「下一项目要讲什么」的任何提示。", action: "在跨项目处加一个轻转场头图：一句设计主张 + 本项目核心决策标签，帮读者快速换档进入下一章。", effort: "small", confidence: "medium", scope_limit: DEMO_SCOPE, structural: false }
+        ];
+      }
+      function demoFindingsJob() {
+        return [
+          { id: "df1", rank: 1, page_number: 6, priority: "high", category: "个人贡献", title: "（示例）合作项目未说明个人负责范围", evidence: "示例场景：这页是团队项目，图面完整，但没有一句话交代作者本人具体做了什么。", action: "每个合作项目页眉加一行落款：「个人承担——平面深化与 1:50 剖面（Revit / Rhino 独立完成）」；若有分工图，用色块标出个人负责的部分。", effort: "small", confidence: "medium", scope_limit: DEMO_SCOPE, structural: false },
+          { id: "df2", rank: 2, page_number: 3, priority: "medium", category: "图面可读", title: "（示例）图纸标注偏小，屏幕阅读吃力", evidence: "示例场景：轴测与总平面上的标注字在全屏浏览时低于舒适阅读阈值，细节糊成一团。", action: "标注统一 14–16pt 出图；屏幕版另存一份高对比导出；信息密度过大时，把总图和局部拆成两页。", effort: "medium", confidence: "medium", scope_limit: DEMO_SCOPE, structural: false },
+          { id: "df3", rank: 3, page_number: 9, priority: "medium", category: "技术表达", title: "（示例）构造节点缺少落地信息", evidence: "示例场景：节点轴测只表达形态关系，没有材料、尺寸和交接说明，看不出真实施工逻辑。", action: "每个节点轴测旁边补 3 行：材料、收口方式、与前一工序的交接关系；点到为止，不用写成说明书。", effort: "medium", confidence: "medium", scope_limit: DEMO_SCOPE, structural: false }
+        ];
+      }
+      function makeDemoReport(opts) {
+        return {
+          id: uid("demo"),
+          file_name: opts.fileName, mode: opts.mode, audience: opts.audience || "",
+          deadline_days: opts.deadlineDays, total_pages: opts.totalPages || 0, analyzed_pages: 0,
+          summary: DEMO_SUMMARY, boundary_note: DEMO_BOUNDARY, coverage_note: DEMO_COVERAGE,
+          created_at: new Date().toISOString(), is_demo: true,
+          findings: opts.mode === "application" ? demoFindingsApplication() : demoFindingsJob()
+        };
+      }
+
+      /* ============ DeepSeek 提示词 ============ */
+      function buildPrompt() {
+        var modeText = state.mode === "application"
+          ? "院校申请：重点检查叙事逻辑、设计思考、场地与约束推演、图文对应、项目间连贯性。"
+          : "设计岗位求职：重点检查个人贡献边界、落地与技术表达、规范与标注、图面清晰度、是否存在夸大表述。";
+        var deadlineRule = state.deadlineDays < 3
+          ? "距离提交不足3天。只给可逆、低风险、小范围修改；不要建议重排项目或重构整套叙事。"
+          : "可以提出必要的结构性改动，但必须说明工作量与风险。";
+        var audience = (state.audience || "").trim() || "未指定具体院校或雇主，请只使用通用的建筑/城市设计评审标准。";
+        return [
+          "你是一位谨慎的建筑与城市设计作品集评审助手。请根据按页码标注的页面图像完成第一轮自检，不替代导师或招聘方判断。",
+          "",
+          "场景：" + modeText,
+          "目标：" + audience,
+          "距截止：" + state.deadlineDays + "天。" + deadlineRule,
+          "",
+          "只基于图像中真实可见的内容给出最多3条、按影响优先级排序的建议。每条必须落到一个具体页码，描述可见证据，再给出可执行改法。不要给总分，不要虚构图纸类型、院校偏好或作者意图。看不清、无法确认或涉及主观设计判断时，将 confidence 设为 uncertain，并在 scope_limit 中明确写\"无法充分判断\"的原因。若只分析了部分页面，要在 coverage_note 里说明覆盖范围。",
+          "",
+          "只返回合法 JSON（不要 markdown 代码块），结构如下：",
+          "{",
+          '  "summary": "整体一句话概述（不超过260字）",',
+          '  "boundary_note": "本次点评的使用边界（不超过220字）",',
+          '  "coverage_note": "分析覆盖的页数范围说明（不超过180字）",',
+          '  "findings": [',
+          "    {",
+          '      "page_number": 页码整数（从1起，不得超过实际页面数）,',
+          '      "priority": "high|medium|low",',
+          '      "category": "短分类名（不超过40字，如 叙事逻辑/图文对应/版式可读性）",',
+          '      "title": "建议标题（不超过80字）",',
+          '      "evidence": "在该页真实看到的证据（不超过240字）",',
+          '      "action": "具体可执行的改法（不超过320字）",',
+          '      "effort": "small|medium|large",',
+          '      "confidence": "high|medium|uncertain",',
+          '      "scope_limit": "判断边界说明（不超过180字）",',
+          '      "structural": true 或 false',
+          "    }",
+          "  ]",
+          "}",
+          "findings 取 1–3 条，按优先级从高到低排序；priority、effort、confidence 必须使用上面列出的英文值。"
+        ].join("\n");
+      }
+
+      /* ============ 视图：组合页 ============ */
+      function privacyLine() {
+        var s = "纯前端公开页：API Key 只保存在你浏览器的 localStorage 里，不经过本页服务端；真机分析时，由你的浏览器把它直发给 DeepSeek API。PDF 原文件留在本设备，仅把压缩页面预览发给 DeepSeek 做本次点评；不持久化 PDF 与页面图像；历史报告只保留文字。";
+        if (store.broken) s += "（检测到浏览器禁用了本地存储：当前会话结束后 Key 与历史报告都会消失。）";
+        return esc(s);
+      }
+      function modeBannerHTML() {
+        if (getKey()) {
+          return '<div class="mode-banner live"><b>真机分析 · Key 已连接</b><span>点评将从你浏览器直连 DeepSeek API，费用从你的余额扣除；随时可在「API 设置」里换 Key 或删除。</span></div>';
+        }
+        return '<div class="mode-banner demo"><b>演示模式 · 当前未填写 API Key</b>' +
+          '<span>这次点评会生成一份明确标注「演示」的示例报告，仅用来体验流程——不是你文件的真实分析。你的文件会先在本地解析验证。</span>' +
+          '<button type="button" class="key-cta" id="fill-key-btn">填 Key，换真机分析</button></div>';
+      }
+      function composeHTML() {
+        var hasKey = !!getKey();
+        return '<main class="compose-layout">' +
+          '<section class="hero-copy">' +
+            '<div class="scribble">别先看分数，先看改法</div>' +
+            '<h1>先找出<br /><em>最值得改</em>的 3 处</h1>' +
+            '<p>为建筑与城市设计作品集做一次有页码、有证据、敢说「不确定」的第一轮自检。</p>' +
+            '<div class="promise-strip" aria-label="点评步骤">' +
+              '<span><b>1</b>定位页面</span><span><b>2</b>说明证据</span><span><b>3</b>给出改法</span>' +
+            '</div>' +
+          '</section>' +
+          '<section class="workbench" aria-label="新建作品集点评">' +
+            '<div class="paper-tab">NEW REVIEW</div>' +
+            '<div id="dropzone" class="drop-zone' + (state.file ? " has-file" : "") + '" role="button" tabindex="0" aria-label="选择 PDF 作品集文件">' +
+              '<input id="file-input" type="file" accept="application/pdf,.pdf" tabindex="-1" aria-hidden="true" />' +
+              FOLDER_SKETCH +
+              '<strong>' + (state.file ? "已夹好，准备开看" : "把 PDF 放进文件夹") + '</strong>' +
+              '<span>' + esc(fileHint()) + '</span>' +
+              '<button type="button" class="choose-chip" id="choose-btn">' + (state.file ? "换一份" : "选择文件") + '</button>' +
+            '</div>' +
+            '<div class="field-group">' +
+              '<span class="field-label">这本作品集要去哪里？</span>' +
+              '<div class="segmented" role="group" aria-label="作品集用途">' +
+                '<button type="button" data-mode="application" class="' + (state.mode === "application" ? "active" : "") + '" aria-pressed="' + (state.mode === "application") + '">院校申请</button>' +
+                '<button type="button" data-mode="job" class="' + (state.mode === "job" ? "active" : "") + '" aria-pressed="' + (state.mode === "job") + '">设计求职</button>' +
+              '</div>' +
+            '</div>' +
+            '<label class="text-field"><span>' + (state.mode === "application" ? "目标院校 / 方向（选填）" : "目标岗位 / 公司（选填）") + '</span>' +
+              '<input id="audience-input" maxlength="160" value="' + esc(state.audience) + '" placeholder="' + (state.mode === "application" ? "例如：建筑学硕士 / 城市设计" : "例如：建筑设计实习 / 城市设计岗") + '" />' +
+            '</label>' +
+            '<label class="deadline-field"><span>离提交还有</span>' +
+              '<input id="deadline-input" type="number" min="0" max="365" value="' + state.deadlineDays + '" aria-label="距离提交的天数" /><span>天</span>' +
+            '</label>' +
+            '<div class="urgent-note" id="urgent-note"' + (state.deadlineDays < 3 ? "" : " hidden") + '><b>最后冲刺模式</b><span>只建议可逆的小修，不碰整套结构。</span></div>' +
+            modeBannerHTML() +
+            '<p class="error-message" id="error-msg" role="alert" tabindex="-1"' + (state.error ? "" : " hidden") + '>' + esc(state.error) + '</p>' +
+            (state.pdfError ? '<p class="error-message" role="alert">' + esc(state.pdfError) + '</p>' : "") +
+            '<button class="primary-button" id="start-btn"><span>开始看 Top 3 · ' + (hasKey ? "真机分析" : "演示版") + '</span>' + ARROW_SVG + '</button>' +
+            (hasKey ? "" : '<button type="button" class="sample-link" id="sample-link">没有 PDF？先看一份示例报告 →</button>') +
+            '<p class="privacy-line">' + privacyLine() + '</p>' +
+          '</section>' +
+        '</main>';
+      }
+
+      /* ============ 视图：处理中 ============ */
+      function processingHTML() {
+        var hasKey = !!getKey();
+        return '<main class="processing-view" aria-live="polite">' +
+          '<div class="scan-stack" aria-hidden="true">' +
+            '<div class="sheet sheet-back"></div>' +
+            '<div class="sheet sheet-front"><span id="p-page">p. 1</span><i></i></div>' +
+            '<div class="scanner-line" id="p-scan" style="top: 24%"></div>' +
+          '</div>' +
+          '<div class="progress-copy">' +
+            '<span class="counter" id="p-counter">0%</span>' +
+            '<h1 id="p-label">' + esc(state.label) + '</h1>' +
+            '<p id="p-sub">' + (hasKey ? "把图面与文字分开看，再对回具体页码。" : "演示模式：PDF 在本设备完成解析验证，报告为示例内容。") + '</p>' +
+            '<div class="progress-track"><span id="p-track" style="width: 0%"></span></div>' +
+          '</div>' +
+        '</main>';
+      }
+      function setProgress(v) {
+        state.progress = Math.max(0, Math.min(100, Math.round(v)));
+        var c = qs("#p-counter"); if (c) c.textContent = state.progress + "%";
+        var t = qs("#p-track"); if (t) t.style.width = state.progress + "%";
+        var pg = qs("#p-page"); if (pg) pg.textContent = "p. " + Math.max(1, Math.round((state.progress / 100) * 12));
+        var s = qs("#p-scan"); if (s) s.style.top = (22 + (state.progress % 48)) + "%";
+      }
+      function setProcessingLabel(label) {
+        state.label = label;
+        var l = qs("#p-label"); if (l) l.textContent = label;
+      }
+
+      /* ============ 视图：报告 ============ */
+      function reportHTML() {
+        var review = state.review;
+        if (!review) {
+          return '<main class="report-layout"><div class="empty-report"><h2>这份报告没有找到</h2><button type="button" id="back-compose">重新开始</button></div></main>';
+        }
+        return '<main class="report-layout">' +
+          reportIntroHTML(review) +
+          findingDetailHTML(review) +
+          reportBoundaryHTML(review) +
+        '</main>';
+      }
+      function reportIntroHTML(review) {
+        var chips = review.is_demo
+          ? '<span class="demo-chip">演示报告</span><span>' + esc(modeLabel(review.mode)) + '</span><span>' + esc(fmtDate(review.created_at)) + '</span>'
+          : '<span>' + esc(modeLabel(review.mode)) + '</span><span>' + review.analyzed_pages + '/' + review.total_pages + ' 页已分析</span><span>' + esc(fmtDate(review.created_at)) + '</span>';
+        var banner = review.deadline_days < 3 ? '<div class="deadline-banner"><b>最后冲刺</b> 已把结构性大改移出优先建议。</div>' : "";
+        var demoRibbon = review.is_demo
+          ? '<div class="demo-ribbon"><b>这是演示报告</b><span>以下 3 条是示例建议，未分析你的文件。要分析自己的作品集，请填入你的 DeepSeek API Key。</span><button type="button" class="key-cta" id="ribbon-key-btn">填 Key，换真机分析</button></div>'
+          : "";
+        var indexBtns = review.findings.map(function (item, i) {
+          return '<button type="button" role="tab" aria-selected="' + (state.activeFinding === i) + '" class="' + (state.activeFinding === i ? "active" : "") + '" data-findex="' + i + '">' +
+            '<b>0' + item.rank + '</b><span>' + esc(item.title) + '</span><i>p.' + item.page_number + '</i></button>';
+        }).join("");
+        return '<section class="report-intro">' +
+          '<button type="button" class="back-link" id="back-compose">← 新建点评</button>' +
+          '<div class="report-meta">' + chips + '</div>' +
+          '<h1>先改这 <em>' + review.findings.length + '</em> 处</h1>' +
+          '<p>' + esc(review.summary) + '</p>' +
+          banner + demoRibbon +
+          '<div class="finding-index" role="tablist" aria-label="三条优先建议">' + indexBtns + '</div>' +
+        '</section>';
+      }
+      function findingDetailHTML(review) {
+        var item = review.findings[state.activeFinding] || review.findings[0];
+        if (!item) return "";
+        var demo = !!review.is_demo;
+        var preview = state.previews[item.page_number];
+        var pageBlock;
+        if (preview) {
+          pageBlock = '<img src="' + preview + '" alt="本次上传作品集第 ' + item.page_number + ' 页预览" />';
+        } else {
+          pageBlock = '<div class="preview-placeholder"><b>p.' + item.page_number + '</b><span>' + (demo ? "演示报告无关联页面" : "历史报告未保存页面图像") + '</span></div>';
+        }
+        var scopeTitle = demo ? "为什么不能用它改" : (item.confidence === "uncertain" ? "为什么无法确认" : "判断边界");
+        return '<section class="finding-detail" aria-label="第 ' + item.rank + ' 条建议详情">' +
+          '<div class="detail-head"><div>' +
+            '<span class="priority ' + item.priority + '">' + esc(priorityLabel(item.priority)) + '</span>' +
+            '<span class="category">' + esc(item.category) + '</span>' +
+          '</div><span class="confidence ' + item.confidence + '">' + esc(confidenceLabel(item.confidence)) + '</span></div>' +
+          '<h2>' + esc(item.title) + '</h2>' +
+          '<div class="page-evidence">' +
+            '<div class="page-preview">' + pageBlock + '<span class="page-pin">p.' + item.page_number + '</span></div>' +
+            '<div class="evidence-copy"><span class="mini-label">' + (demo ? "示例 · 证据会长这样" : "我在这页看到") + '</span><p>' + esc(item.evidence) + '</p></div>' +
+          '</div>' +
+          '<div class="action-note"><span class="mini-label">' + (demo ? "示例 · 改法会长这样" : "可以这样改") + '</span><p>' + esc(item.action) + '</p>' +
+            '<div class="action-meta"><span>' + esc(effortLabel(item.effort)) + '</span><span>' + (item.structural ? "涉及结构调整" : "局部可逆修改") + '</span></div>' +
+          '</div>' +
+          '<div class="scope-note"><b>' + esc(scopeTitle) + '</b><span>' + esc(item.scope_limit) + '</span></div>' +
+          '<div class="detail-nav">' +
+            '<button type="button" id="prev-finding"' + (state.activeFinding === 0 ? " disabled" : "") + '>上一条</button>' +
+            '<span>' + (state.activeFinding + 1) + ' / ' + review.findings.length + '</span>' +
+            '<button type="button" id="next-finding"' + (state.activeFinding >= review.findings.length - 1 ? " disabled" : "") + '>下一条</button>' +
+          '</div>' +
+        '</section>';
+      }
+      function reportBoundaryHTML(review) {
+        return '<aside class="report-boundary">' +
+          '<div><b>覆盖说明</b><p>' + esc(review.coverage_note) + '</p></div>' +
+          '<div><b>使用边界</b><p>' + esc(review.boundary_note) + '</p></div>' +
+          '<p class="human-check">重大调整请再找导师或行业人士复核。</p>' +
+        '</aside>';
+      }
+
+      /* ============ 历史抽屉 ============ */
+      function renderDrawer() {
+        var root = qs("#drawer-root");
+        if (!state.historyOpen) { root.innerHTML = ""; return; }
+        var reports = getReports();
+        var list;
+        if (reports.length) {
+          list = '<div class="history-list">' + reports.map(function (r) {
+            var demoTag = r.is_demo ? '<span class="badge-demo">DEMO</span>' : "";
+            return '<article class="history-item">' +
+              '<button type="button" class="history-main" data-open="' + esc(r.id) + '" aria-label="打开 ' + esc(r.file_name) + ' 报告">' +
+                '<span class="history-mode">' + esc(modeLabel(r.mode)) + demoTag + '</span>' +
+                '<strong>' + esc(r.file_name) + '</strong>' +
+                '<small>' + esc(fmtDate(r.created_at)) + ' · ' + (r.findings ? r.findings.length : 0) + ' 条建议</small>' +
+              '</button>' +
+              '<button type="button" class="delete-button" data-del="' + esc(r.id) + '" aria-label="删除 ' + esc(r.file_name) + ' 报告">' + TRASH_SVG + '</button>' +
+            '</article>';
+          }).join("") + '</div>' +
+          '<div class="drawer-foot"><button type="button" class="history-clear' + (state.clearArmed ? " arming" : "") + '" id="clear-history">' + (state.clearArmed ? "确认清空？" : "清空全部历史") + '</button></div>';
+        } else {
+          list = '<div class="drawer-empty"><b>还没有报告</b><span>完成第一次点评后，它会收进这里。</span></div>';
+        }
+        root.innerHTML = '<div class="drawer-backdrop" id="drawer-backdrop">' +
+          '<aside class="history-drawer" aria-label="历史报告">' +
+            '<div class="drawer-head"><div><span>ARCHIVE</span><h2>历史报告</h2></div>' +
+            '<button type="button" id="drawer-close" aria-label="关闭历史报告">×</button></div>' +
+            '<p class="drawer-note">报告文字存在本浏览器里（只含文字与页码，没有 PDF 和页面图）；清缓存或换浏览器会消失。</p>' +
+            list +
+          '</aside></div>';
+        qs("#drawer-close").addEventListener("click", closeHistory);
+        qs("#drawer-backdrop").addEventListener("mousedown", function (e) {
+          if (e.target === e.currentTarget) closeHistory();
+        });
+        qsa("[data-open]").forEach(function (b) {
+          b.addEventListener("click", function () { openStored(b.getAttribute("data-open")); });
+        });
+        qsa("[data-del]").forEach(function (b) {
+          b.addEventListener("click", function () { deleteReport(b.getAttribute("data-del")); });
+        });
+        var clr = qs("#clear-history");
+        if (clr) clr.addEventListener("click", function () {
+          if (!state.clearArmed) { state.clearArmed = true; renderDrawer(); return; }
+          persistReports([]); state.clearArmed = false;
+          if (state.review) { state.review = null; state.previews = {}; state.stage = "compose"; renderView(); }
+          renderDrawer(); toast("历史报告已清空");
+        });
+      }
+      function openHistory() { state.historyOpen = true; state.clearArmed = false; renderDrawer(); }
+      function closeHistory() { state.historyOpen = false; state.clearArmed = false; renderDrawer(); }
+
+      /* ============ API Key 弹窗 ============ */
+      function maskedKey(k) {
+        if (k.length <= 8) return "sk-••••";
+        return "sk-••••" + k.slice(-4);
+      }
+      function renderModal() {
+        var root = qs("#modal-root");
+        if (!state.keyOpen) { root.innerHTML = ""; return; }
+        var key = getKey();
+        var model = getModel();
+        root.innerHTML = '<div class="modal-backdrop" id="modal-backdrop">' +
+          '<div class="key-modal" role="dialog" aria-modal="true" aria-label="API 设置">' +
+            '<button type="button" class="modal-close" id="modal-close" aria-label="关闭">×</button>' +
+            '<h2>API 设置</h2>' +
+            '<p class="key-sub">DeepSeek · 浏览器直连，无中间服务器</p>' +
+            '<div class="key-status"><span class="chip ' + (key ? "on" : "off") + '">' + (key ? "已连接" : "未填写") + '</span>' +
+              (key ? "<code>当前 Key：" + esc(maskedKey(key)) + "</code>" : "<span>不填也能用：演示模式带明确标注。</span>") +
+            '</div>' +
+            '<div class="key-field"><span>你的 DeepSeek API Key</span>' +
+              '<div class="key-row"><input id="key-input" type="' + (state.keyVisible ? "text" : "password") + '" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="粘贴 sk- 开头的 Key…" maxlength="200" />' +
+              '<button type="button" class="toggle-eye" id="key-toggle">' + (state.keyVisible ? "隐藏" : "显示") + '</button></div>' +
+              '<p class="key-hint">分析会按 DeepSeek 官方计费从你的余额扣除；Key 只存你浏览器的 localStorage，不要分享给别人，也不要贴进聊天记录。</p>' +
+            '</div>' +
+            '<div class="model-field"><span>模型（高级）</span>' +
+              '<div class="key-row"><input id="model-input" type="text" value="' + esc(model) + '" maxlength="80" autocomplete="off" autocapitalize="off" spellcheck="false" />' +
+              '<button type="button" class="model-reset" id="model-reset">恢复默认</button></div>' +
+              '<p class="key-hint">默认 deepseek-flash。若 DeepSeek 返回「模型不可用」，在这里换成官方文档当前的模型名。</p>' +
+            '</div>' +
+            '<div class="key-actions">' +
+              '<button type="button" class="save-key" id="key-save">保存 Key</button>' +
+              (key ? '<button type="button" class="delete-key" id="key-delete">删除 Key</button>' : "") +
+            '</div>' +
+            '<p class="key-warn" id="key-warn" hidden></p>' +
+            '<div class="key-steps"><span>怎么拿到 Key？</span><ol>' +
+              '<li><a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">打开 DeepSeek 开放平台 · API Keys</a> 创建一把 Key。</li>' +
+              '<li>充值少量金额（按官方计费从余额扣）。</li>' +
+              '<li>粘贴到上面保存：之后点评就从你的浏览器直发 DeepSeek。</li>' +
+            '</ol></div>' +
+            '<div class="key-note">本页没有后端：你的 Key 和点评请求只在你的浏览器与 api.deepseek.com 之间流动。公开链接打开的任何人都要自己填 Key——谁的 Key 谁付费。</div>' +
+          '</div></div>';
+        wireModal();
+      }
+      function openModal() { state.keyOpen = true; state.keyVisible = false; renderModal(); }
+      function closeModal() { state.keyOpen = false; renderModal(); }
+      function wireModal() {
+        qs("#modal-close").addEventListener("click", closeModal);
+        qs("#modal-backdrop").addEventListener("mousedown", function (e) {
+          if (e.target === e.currentTarget) closeModal();
+        });
+        qs("#key-toggle").addEventListener("click", function () {
+          state.keyVisible = !state.keyVisible;
+          var inp = qs("#key-input");
+          inp.type = state.keyVisible ? "text" : "password";
+          this.textContent = state.keyVisible ? "隐藏" : "显示";
+          inp.focus();
+        });
+        qs("#model-reset").addEventListener("click", function () { qs("#model-input").value = DEFAULT_MODEL; });
+        qs("#key-save").addEventListener("click", function () { saveKeyFromModal(); });
+        qs("#key-input").addEventListener("keydown", function (e) { if (e.key === "Enter") saveKeyFromModal(); });
+        var del = qs("#key-delete");
+        if (del) del.addEventListener("click", function () {
+          delKey(); closeModal(); updatePill();
+          if (state.stage === "compose") renderView();
+          toast("Key 已删除，将回到演示模式");
+        });
+      }
+      function saveKeyFromModal() {
+        var val = qs("#key-input").value.trim();
+        var warn = qs("#key-warn");
+        if (!val) {
+          if (getKey()) { toast("未更改：输入框为空"); return; }
+          warn.hidden = false; warn.textContent = "请先粘贴你的 DeepSeek API Key。";
+          return;
+        }
+        var m = qs("#model-input").value.trim() || DEFAULT_MODEL;
+        setKey(val); setModel(m); closeModal(); updatePill();
+        if (state.stage === "compose") renderView();
+        toast(val.indexOf("sk-") === 0 ? "Key 已保存，可以开始真机分析了" : "Key 已保存（注意：它不以 sk- 开头，请确认复制完整）");
+      }
+
+      /* ============ PDF 本地拆页 ============ */
+      function renderPdf(file, onProgress) {
+        return file.arrayBuffer().then(function (buf) {
+          var lib = window.pdfjsLib;
+          if (!lib) throw new Error("PDF 解析组件没有加载成功，请刷新页面重试。");
+          return lib.getDocument({ data: new Uint8Array(buf) }).promise;
+        }).then(function (doc) {
+          var pageLimit = Math.min(doc.numPages, 12);
+          var pages = [], previews = {};
+          var chain = Promise.resolve();
+          for (var n = 1; n <= pageLimit; n++) {
+            (function (pageNumber) {
+              chain = chain.then(function () {
+                return doc.getPage(pageNumber).then(function (page) {
+                  var base = page.getViewport({ scale: 1 });
+                  var scale = Math.min(1.65, 1180 / Math.max(base.width, base.height));
+                  var viewport = page.getViewport({ scale: scale });
+                  var canvas = document.createElement("canvas");
+                  canvas.width = Math.max(1, Math.floor(viewport.width));
+                  canvas.height = Math.max(1, Math.floor(viewport.height));
+                  var ctx = canvas.getContext("2d", { alpha: false });
+                  if (!ctx) throw new Error("无法创建 PDF 预览画布");
+                  ctx.fillStyle = "#ffffff";
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+                  return page.render({ canvas: canvas, canvasContext: ctx, viewport: viewport }).promise.then(function () {
+                    var dataUrl = canvas.toDataURL("image/jpeg", 0.72);
+                    var parts = dataUrl.split(",");
+                    if (!parts[1]) throw new Error("第 " + pageNumber + " 页转换失败");
+                    pages.push({ page_number: pageNumber, data_base64: parts[1], mime_type: "image/jpeg" });
+                    previews[pageNumber] = dataUrl;
+                    onProgress(8 + Math.round((pageNumber / pageLimit) * 52));
+                  });
+                });
+              });
+            })(n);
+          }
+          return chain.then(function () { return { pages: pages, previews: previews, totalPages: doc.numPages }; });
+        });
+      }
+
+      /* ============ DeepSeek 直连 ============ */
+      function ourError(msg) { var e = new Error(msg); e._ours = true; return e; }
+      function extractJSON(text) {
+        var t = String(text || "").trim();
+        try { return JSON.parse(t); } catch (e) { /* fall through */ }
+        var m = t.match(/\{[\s\S]*\}/);
+        if (m) { try { return JSON.parse(m[0]); } catch (e2) { /* fall through */ } }
+        throw ourError("模型输出异常（不是合法 JSON），请重新点评一次。");
+      }
+      function httpError(status, text, modelName) {
+        if (status === 401) return ourError("Key 无效：DeepSeek 返回 401。请检查 Key 是否复制完整，或去开放平台重新创建。");
+        if (status === 402) return ourError("余额不足：DeepSeek 返回 402。请先在开放平台充值少量金额后再试。");
+        if (status === 429) return ourError("请求太频繁（429），歇一会儿再试。");
+        if (status >= 400 && status < 500 && String(text || "").toLowerCase().indexOf("model") >= 0) {
+          return ourError("模型不可用：DeepSeek 不认识「" + modelName + "」。请在「API 设置」里换成官方文档当前的模型名。");
+        }
+        return ourError("DeepSeek 请求失败（HTTP " + status + "）。" + (text ? "详情：" + String(text).slice(0, 160) : ""));
+      }
+      function callDeepSeek(key, model, prompt, pages) {
+        var content = [{ type: "text", text: "下面一共 " + pages.length + " 张作品集页面截图（按页码顺序）。请完成点评，只用 JSON 输出结果。" }];
+        pages.forEach(function (p) {
+          content.push({ type: "text", text: "作品集第 " + p.page_number + " 页：" });
+          content.push({ type: "image_url", image_url: { url: "data:image/jpeg;base64," + p.data_base64 } });
+        });
+        var ctl = null, timer = null;
+        if (typeof AbortController === "function") {
+          ctl = new AbortController();
+          timer = setTimeout(function () { ctl.abort(); }, 150000);
+        }
+        var opts = {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+          body: JSON.stringify({
+            model: model,
+            messages: [{ role: "system", content: prompt }, { role: "user", content: content }],
+            response_format: { type: "json_object" },
+            max_tokens: 4096
+          })
+        };
+        if (ctl) opts.signal = ctl.signal;
+        return fetch(API_ENDPOINT, opts).then(function (resp) {
+          if (timer) clearTimeout(timer);
+          if (!resp.ok) return resp.text().then(function (text) { throw httpError(resp.status, text, model); });
+          return resp.json();
+        }).then(function (data) {
+          var contentText = data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+          if (!contentText) throw ourError("模型没有返回内容（可能被截断），请重新点评一次。");
+          return extractJSON(contentText);
+        }).catch(function (err) {
+          if (timer) clearTimeout(timer);
+          if (err && err._ours) throw err;
+          if (err && err.name === "AbortError") throw ourError("DeepSeek 请求超时（150 秒），请重试。");
+          throw ourError("连不上 DeepSeek：请检查网络/代理后重试。请求是从你的浏览器直发 api.deepseek.com 的，网络拦截会表现为这个错误。");
+        });
+      }
+
+      /* ============ 输出校验与归一化 ============ */
+      function normalizeReview(out, meta) {
+        if (!out || typeof out !== "object" || Array.isArray(out)) throw ourError("模型输出异常（不是 JSON 对象），请重新点评一次。");
+        function str(v, max, dflt) {
+          var s = String(v == null ? "" : v).trim();
+          if (!s) s = dflt == null ? "" : String(dflt);
+          return s.length > max ? s.slice(0, max) : s;
+        }
+        function pick(list, v, dflt) { return list.indexOf(v) >= 0 ? v : dflt; }
+        var prio = ["high", "medium", "low"], eff = ["small", "medium", "large"], conf = ["high", "medium", "uncertain"];
+        var raw = Array.isArray(out.findings) ? out.findings.slice(0, 3) : [];
+        if (!raw.length) throw ourError("模型输出异常（没有生成建议），请重新点评一次。");
+        return {
+          id: uid("r"),
+          file_name: meta.fileName, mode: meta.mode, audience: meta.audience || "",
+          deadline_days: meta.deadlineDays, total_pages: meta.totalPages, analyzed_pages: meta.analyzedPages,
+          summary: str(out.summary, 260, "点评已完成，请查看下面三条建议。"),
+          boundary_note: str(out.boundary_note, 220, "本次点评仅基于页面截图的第一轮自检，不替代导师或招聘方判断。"),
+          coverage_note: str(out.coverage_note, 180, meta.analyzedPages >= meta.totalPages ? "已分析全部 " + meta.totalPages + " 页。" : "仅分析了前 " + meta.analyzedPages + " / " + meta.totalPages + " 页。"),
+          created_at: new Date().toISOString(), is_demo: false,
+          findings: raw.map(function (f, i) {
+            var pg = parseInt(f.page_number, 10);
+            if (!(pg >= 1)) pg = 1;
+            if (pg > meta.analyzedPages) pg = meta.analyzedPages;
+            return {
+              id: "f" + (i + 1), rank: i + 1, page_number: pg,
+              priority: pick(prio, f.priority, "medium"),
+              category: str(f.category, 40, "综合"),
+              title: str(f.title, 80, "建议 " + (i + 1)),
+              evidence: str(f.evidence, 240, ""),
+              action: str(f.action, 320, ""),
+              effort: pick(eff, f.effort, "medium"),
+              confidence: pick(conf, f.confidence, "uncertain"),
+              scope_limit: str(f.scope_limit, 180, ""),
+              structural: meta.deadlineDays < 3 ? false : (f.structural === true)
+            };
+          })
+        };
+      }
+
+      /* ============ 分析流水线 ============ */
+      function progressAnim(to, ms, tickDone) {
+        return new Promise(function (resolve) {
+          var from = state.progress, t0 = Date.now();
+          var iv = setInterval(function () {
+            var k = Math.min(1, (Date.now() - t0) / ms);
+            setProgress(from + (to - from) * k);
+            if (k >= 1) { clearInterval(iv); resolve(); }
+          }, 60);
+        });
+      }
+      function startProgressTick() {
+        return setInterval(function () {
+          if (state.stage === "processing" && state.progress < 92) setProgress(state.progress + 1);
+        }, 900);
+      }
+      function runPipeline() {
+        var hasKey = !!getKey();
+        return renderPdf(state.file, setProgress).then(function (rendered) {
+          if (!hasKey) {
+            // 演示模式：在本地解析后生成明确标注的示例报告（不发送任何内容）
+            setProcessingLabel("正在生成演示报告");
+            setProgress(68);
+            return progressAnim(98, 2200).then(function () {
+              var review = makeDemoReport({
+                mode: state.mode, fileName: state.file.name, audience: state.audience,
+                deadlineDays: state.deadlineDays, totalPages: rendered.totalPages
+              });
+              saveReportToHistory(review);
+              setProgress(100);
+              finishPipeline(review, {});
+            });
+          }
+          setProcessingLabel("正在比对评审标准");
+          setProgress(68);
+          var key = getKey(), model = getModel(), prompt = buildPrompt();
+          var tick = startProgressTick();
+          return callDeepSeek(key, model, prompt, rendered.pages).then(function (out) {
+            clearInterval(tick);
+            var review = normalizeReview(out, {
+              fileName: state.file.name, mode: state.mode, audience: state.audience,
+              deadlineDays: state.deadlineDays, totalPages: rendered.totalPages, analyzedPages: rendered.pages.length
+            });
+            saveReportToHistory(review);
+            setProgress(100);
+            finishPipeline(review, rendered.previews);
+          }, function (err) { clearInterval(tick); throw err; });
+        });
+      }
+      function finishPipeline(review, previews) {
+        state.review = review;
+        state.activeFinding = 0;
+        state.previews = previews;
+        setTimeout(function () {
+          state.stage = "report";
+          renderView();
+          window.scrollTo(0, 0);
+        }, 320);
+      }
+      function startAnalysis() {
+        if (!state.file) {
+          showError("请先选择一份 PDF 作品集。");
+          openPicker();
+          return;
+        }
+        if (!window.pdfjsLib) { showError("PDF 组件尚未加载成功，请刷新后重试。"); return; }
+        state.error = "";
+        state.stage = "processing";
+        renderView();
+        setProgress(4);
+        setProcessingLabel("正在拆解页面");
+        runPipeline().catch(function (reason) {
+          var msg = reason && reason.message ? reason.message : "点评没有完成，请重试。";
+          state.error = msg;
+          state.stage = "compose";
+          state.progress = 0;
+          renderView();
+          var em = qs("#error-msg");
+          if (em) { try { em.focus({ preventScroll: false }); } catch (e) { /* ignore */ } }
+        });
+      }
+      function showError(msg) {
+        state.error = msg;
+        renderView();
+        var em = qs("#error-msg");
+        if (em) { try { em.focus(); } catch (e) { /* ignore */ } }
+      }
+      function samplePreview() {
+        // 无 PDF 访客：直接体验示例报告
+        var review = makeDemoReport({
+          mode: state.mode, fileName: "示例报告（无文件体验）", audience: "",
+          deadlineDays: state.deadlineDays, totalPages: 0
+        });
+        saveReportToHistory(review);
+        state.review = review;
+        state.activeFinding = 0;
+        state.previews = {};
+        state.stage = "report";
+        renderView();
+        window.scrollTo(0, 0);
+      }
+
+      /* ============ 历史报告操作 ============ */
+      function openStored(id) {
+        var found = null;
+        getReports().forEach(function (r) { if (String(r.id) === String(id)) found = r; });
+        if (!found) { toast("这份报告找不到了"); return; }
+        state.review = found;
+        state.activeFinding = 0;
+        state.previews = {}; // 历史报告：页面图像从不持久化
+        closeHistory();
+        state.stage = "report";
+        renderView();
+        window.scrollTo(0, 0);
+      }
+      function deleteReport(id) {
+        var kept = getReports().filter(function (r) { return String(r.id) !== String(id); });
+        persistReports(kept);
+        state.clearArmed = false;
+        if (state.review && String(state.review.id) === String(id)) {
+          state.review = null;
+          state.previews = {};
+          state.stage = "compose";
+          renderView();
+        }
+        renderDrawer();
+        toast("已删除一条报告");
+      }
+
+      /* ============ 文件选择 ============ */
+      function openPicker() {
+        var fi = qs("#file-input");
+        if (fi) fi.click();
+      }
+      function chooseFile(next) {
+        if (!next) return;
+        if (next.type !== "application/pdf" && !next.name.toLowerCase().endsWith(".pdf")) {
+          state.error = "请选择 PDF 文件。";
+          renderView();
+          return;
+        }
+        if (next.size > 20 * 1024 * 1024) {
+          state.error = "文件超过 20MB，请先压缩后再试。";
+          renderView();
+          return;
+        }
+        state.error = "";
+        state.file = next;
+        renderView();
+      }
+
+      /* ============ 视图切换与接线 ============ */
+      function renderView() {
+        var v = qs("#view");
+        if (state.stage === "processing") {
+          v.innerHTML = processingHTML();
+        } else if (state.stage === "report") {
+          v.innerHTML = reportHTML();
+          wireReport();
+        } else {
+          v.innerHTML = composeHTML();
+          wireCompose();
+        }
+      }
+      function wireCompose() {
+        var fi = qs("#file-input");
+        var dz = qs("#dropzone");
+        fi.addEventListener("change", function () { chooseFile(fi.files && fi.files[0]); fi.value = ""; });
+        qs("#choose-btn").addEventListener("click", function (e) { e.stopPropagation(); openPicker(); });
+        dz.addEventListener("click", function () { openPicker(); });
+        dz.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPicker(); } });
+        dz.addEventListener("dragover", function (e) { e.preventDefault(); dz.classList.add("is-dragging"); });
+        dz.addEventListener("dragleave", function () { dz.classList.remove("is-dragging"); });
+        dz.addEventListener("drop", function (e) {
+          e.preventDefault();
+          dz.classList.remove("is-dragging");
+          if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) chooseFile(e.dataTransfer.files[0]);
+        });
+        qsa(".segmented button").forEach(function (b) {
+          b.addEventListener("click", function () {
+            state.mode = b.getAttribute("data-mode") === "job" ? "job" : "application";
+            renderView();
+          });
+        });
+        var ai = qs("#audience-input");
+        ai.addEventListener("input", function () { state.audience = ai.value; });
+        var di = qs("#deadline-input");
+        di.addEventListener("input", function () {
+          var n = Math.round(Number(di.value));
+          if (isNaN(n)) n = 0;
+          n = Math.max(0, Math.min(365, n));
+          state.deadlineDays = n;
+          var note = qs("#urgent-note");
+          if (note) note.hidden = !(n < 3);
+        });
+        var fkb = qs("#fill-key-btn");
+        if (fkb) fkb.addEventListener("click", openModal);
+        var sl = qs("#sample-link");
+        if (sl) sl.addEventListener("click", samplePreview);
+        qs("#start-btn").addEventListener("click", startAnalysis);
+      }
+      function wireReport() {
+        var back = qs("#back-compose");
+        if (back) back.addEventListener("click", resetCompose);
+        var rkb = qs("#ribbon-key-btn");
+        if (rkb) rkb.addEventListener("click", openModal);
+        qsa("[data-findex]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            state.activeFinding = parseInt(b.getAttribute("data-findex"), 10) || 0;
+            renderView();
+          });
+        });
+        var prev = qs("#prev-finding"), next = qs("#next-finding");
+        if (prev) prev.addEventListener("click", function () {
+          if (state.activeFinding > 0) { state.activeFinding--; renderView(); }
+        });
+        if (next) next.addEventListener("click", function () {
+          if (state.review && state.activeFinding < state.review.findings.length - 1) { state.activeFinding++; renderView(); }
+        });
+      }
+      function resetCompose() {
+        state.review = null;
+        state.previews = {};
+        state.stage = "compose";
+        state.error = "";
+        state.activeFinding = 0;
+        if (state.historyOpen) closeHistory();
+        renderView();
+        window.scrollTo(0, 0);
+      }
+      function updatePill() {
+        var pill = qs("#status-pill"), txt = qs("#status-text");
+        if (!pill || !txt) return;
+        if (getKey()) {
+          pill.className = "status-pill live";
+          txt.textContent = "真机分析 · Key 已连接";
+          pill.setAttribute("aria-label", "已配置 API Key，将进行真实 AI 分析");
+        } else {
+          pill.className = "status-pill demo";
+          txt.textContent = "演示模式 · 未填 Key";
+          pill.setAttribute("aria-label", "演示模式：未配置 API Key，将生成示例报告");
+        }
+      }
+      function toast(msg) {
+        var d = document.createElement("div");
+        d.className = "toast";
+        d.textContent = msg;
+        qs("#toast-root").appendChild(d);
+        setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 2400);
+      }
+
+      /* ============ PDF.js 初始化 ============ */
+      function initPdfJs() {
+        if (!window.pdfjsLib) {
+          state.pdfError = "PDF 解析组件没有加载成功，请刷新页面重试。";
+          return;
+        }
+        var lib = window.pdfjsLib;
+        var workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        fetch(workerSrc, { cache: "force-cache" }).then(function (resp) {
+          if (!resp.ok) throw new Error("worker fetch failed");
+          return resp.text();
+        }).then(function (src) {
+          if (!src || src.length < 10000) throw new Error("worker file too small");
+          lib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([src], { type: "text/javascript" }));
+        }).catch(function () {
+          try { lib.GlobalWorkerOptions.workerSrc = workerSrc; } catch (e) { /* ignore */ }
+        });
+      }
+
+      /* ============ 初始化 ============ */
+      function init() {
+        if (!store.get(LS_MODEL)) setModel(DEFAULT_MODEL);
+        initPdfJs();
+        qs("#brand").addEventListener("click", resetCompose);
+        qs("#key-btn").addEventListener("click", openModal);
+        qs("#history-btn").addEventListener("click", openHistory);
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            if (state.keyOpen) closeModal();
+            else if (state.historyOpen) closeHistory();
+          }
+        });
+        updatePill();
+        renderView();
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+    </script>
+  </body>
+</html>
