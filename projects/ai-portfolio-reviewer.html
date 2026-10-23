@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 作品集点评助手 — 耿想作品集</title>
+<meta name="description" content="AI 作品集点评助手：给求职与申请者上传 PDF 作品集，返回带页码证据、具体改法与置信度的 Top3 修改建议。纯前端实现，隐私优先。">
+<meta property="og:title" content="AI 作品集点评助手 — 案例">
+<meta property="og:description" content="独立完成的 AI 产品原型：上传 PDF 作品集，本地渲染页面截图，调用大模型返回带页码证据的 Top3 修改建议。">
+<meta property="og:image" content="https://xg366-source.github.io/portfolio/assets/images/app-reviewer-home.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='Georgia,serif'>G</text></svg>">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav__logo" href="../index.html">耿想<em> · Portfolio</em></a>
+  <div class="nav__links">
+    <a href="../index.html#cases">案例</a>
+    <a href="../index.html#about">关于</a>
+    <a href="../index.html#contact">联系</a>
+  </div>
+</nav>
+
+<header class="p-hero">
+  <div class="p-hero__num reveal">案例 01 · AI 产品</div>
+  <h1 class="p-hero__title reveal">AI 作品集点评助手</h1>
+  <p class="p-hero__sub reveal">给作品集一个"有页码、有证据、敢说『不确定』"的第一轮自检——上传 PDF，返回最值得改的 Top3 处。</p>
+  <div class="p-hero__facts reveal">
+    <div class="fact"><div class="fact__label">我的角色</div><div class="fact__value">独立完成（需求 → 前端 → 提示词 → 隐私方案）</div></div>
+    <div class="fact"><div class="fact__label">技术栈</div><div class="fact__value">原生 HTML/CSS/JS + DeepSeek API</div></div>
+    <div class="fact"><div class="fact__label">状态</div><div class="fact__value">原型可运行 · 演示模式免 Key</div></div>
+  </div>
+</header>
+
+<section class="p-intro">
+  <div class="p-intro__text reveal">
+    <p>求职与留学申请的作品集，普遍卡在同一个环节：<em>没人能给具体、可执行、可追溯的反馈</em>。我把这件事做成一个能直接跑的产品原型。</p>
+  </div>
+</section>
+
+<section class="case-blocks">
+
+  <div class="cblock reveal">
+    <div class="cblock__label">背景与目标</div>
+    <div class="cblock__body">
+      <p>作品集是设计类求职/申请中最重的交付物，但反馈链路极不透明：导师回复笼统、第三方付费点评贵且不可追溯。目标：做一个轻量工具，用户上传 PDF 后立刻拿到 <b>带页码证据、具体改法、工作量估计与置信度</b> 的 Top3 修改建议，并把"先改哪 3 处"讲清楚。</p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">用户与问题</div>
+    <div class="cblock__body">
+      <p>目标用户：即将投递作品集的设计类学生与求职者（建筑、城市设计方向为主）。</p>
+      <ul>
+        <li>导师/朋友反馈多为"整体不错、某某图可以更好"，没有页码、没有优先级、没有具体改法</li>
+        <li>付费点评贵，且结论无法回看证据，不敢全信</li>
+        <li>临近 DDL 时最需要的是"先改哪几处"，而不是整体评价或分数</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">洞察</div>
+    <div class="cblock__body">
+      <ul>
+        <li><b>要的不是评分，是"行动清单"</b>——所以产品不输出总分，只输出按优先级排序的 Top3，每条都标注页码、可回看的证据和改法</li>
+        <li><b>对"AI 说教"天然不信任</b>——所以每条建议带 evidence（对应原文场景）与 confidence（高 / 中等 / 无法充分判断），模型看不清就明说"不确定"，而不是硬编</li>
+        <li><b>试用门槛决定留存</b>——没有 Key 也要能体验完整流程，于是做演示模式</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">方案与取舍</div>
+    <div class="cblock__body">
+      <ul>
+        <li><b>形态取舍</b>：不做 Chrome 插件 / 小程序 / 后端服务，做<b>纯前端单页</b>——零后端、可托管在任何静态空间、分享成本最低、不依赖个人服务器</li>
+        <li><b>隐私取舍</b>：API Key 只存浏览器 localStorage；PDF 原文件留在本机，仅把压缩后的页面截图发往模型；历史报告只保留文字——用"本地优先"换用户信任</li>
+        <li><b>模式取舍</b>：无 Key 演示模式（内置示例报告）+ 有 Key 真机模式，把"先体验再接入"的成本降到最低</li>
+        <li><b>提示词取舍</b>：强制结构化输出（JSON：页码、优先级、类别、证据、改法、工作量、置信度、覆盖范围），并对"看不清、无法确认"显式要求标注 uncertain，减少幻觉</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">方法与数据</div>
+    <div class="cblock__body">
+      <p>流程：上传 PDF → 本地渲染前 12 页 → 压缩为页面截图 → 按用途（院校申请 / 设计求职）选择评审标准 → 调 DeepSeek API → 解析结构化结果 → 渲染为带页码证据的报告。</p>
+      <p>两种评审模式各配独立提示词；报告含优先级 / 类别 / 置信度标签、工作量与可逆性标注、覆盖范围说明。</p>
+      <span class="todo-note">待补充：真实使用数据（体验人数、点评次数、试用→填写 Key 的转化率）。我目前没有可用数字，不编造。</span>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">结果</div>
+    <div class="cblock__body">
+      <p>完成一个可运行的单页原型：演示模式无需任何配置即可体验完整点评流程；真机模式由用户浏览器直连 DeepSeek。包含历史报告记录、提交倒计时输入、院校申请/设计求职双模式、优先级与置信度标签、演示内容明确标注等细节。</p>
+      <p><b>在线体验</b>（部署在本文档所在站点）：<a href="../ai-portfolio-reviewer/index.html" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">打开 AI 作品集点评助手 →</a></p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">我的角色与复盘</div>
+    <div class="cblock__body">
+      <p>独立完成：需求定义、信息架构、前端实现、提示词设计、隐私与演示机制。全程没有用框架，把每一步走明白了。</p>
+      <p>下次会改：先跑 5–10 位真实用户再迭代；补充埋点与使用统计；支持更多模型与多文件上传；把本案例页"待补充"的数字同步进简历。</p>
+    </div>
+  </div>
+
+</section>
+
+<section class="gallery">
+  <figure class="figure reveal">
+    <div class="figure__img"><img src="../assets/images/app-reviewer-home.jpg" alt="AI 作品集点评助手主界面" loading="lazy"></div>
+    <figcaption class="figure__cap">主界面：上传 PDF · 选择用途 · 演示模式提示（<a href="../ai-portfolio-reviewer/index.html">在线体验</a>）</figcaption>
+  </figure>
+  <figure class="figure reveal">
+    <div class="figure__img"><img src="../assets/images/app-reviewer-report.jpg" alt="AI 作品集点评助手演示报告" loading="lazy"></div>
+    <figcaption class="figure__cap">演示报告：Top3 建议 · 页码证据 · 优先级 / 类别 / 置信度标签</figcaption>
+  </figure>
+</section>
+
+<nav class="p-nav">
+  <a class="p-nav__item" href="../index.html#cases"><span>全部案例</span>← 返回作品集</a>
+  <a class="p-nav__item" href="conflux-strand.html"><span>下一个 · 案例 02</span>Conflux Strand →</a>
+</nav>
+
+<footer class="footer">
+  <span>© <span data-year>2026</span> 耿想</span>
+  <span>AI 产品 · 用户研究作品集</span>
+</footer>
+
+<button class="to-top" aria-label="回到顶部">↑</button>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

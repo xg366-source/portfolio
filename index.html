@@ -1,134 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geng Xiang — Architecture Portfolio 2023–2026</title>
-<meta name="description" content="Portfolio of Geng Xiang — architectural works on healing spaces, community renovation, and urban planning across Nanjing, Faro, Zunyi, Wuhan and Guangzhou, 2023–2026.">
+<title>耿想 | AI 产品 · 用户研究作品集</title>
+<meta name="description" content="耿想——康奈尔高级城市设计硕士在读，建筑学背景，转向 AI 产品方向。做过问卷调研、评论数据挖掘和多方需求取舍，独立完成 AI 作品集点评助手原型并上线个人网站。">
+<meta property="og:title" content="耿想 | AI 产品 · 用户研究作品集">
+<meta property="og:description" content="我把用户洞察，变成可落地的产品方案。康奈尔城市设计硕士在读，建筑学背景，做过问卷调研、评论数据挖掘和多方需求取舍，正转向 AI 产品方向。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://xg366-source.github.io/portfolio/assets/images/app-reviewer-home.jpg">
+<meta property="og:url" content="https://xg366-source.github.io/portfolio/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='Georgia,serif'>G</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
 <nav class="nav">
-  <a class="nav__logo" href="index.html">Geng Xiang</a>
+  <a class="nav__logo" href="index.html">耿想<em> · Portfolio</em></a>
   <div class="nav__links">
-    <a href="#works">Works</a>
-    <a href="#about">About</a>
-    <a href="#contact">Contact</a>
+    <a href="#cases">案例</a>
+    <a href="#about">关于</a>
+    <a href="#contact">联系</a>
   </div>
 </nav>
 
 <header class="hero">
   <div class="hero__intro">
-    <div class="hero__eyebrow">Architecture Portfolio · 2023–2026</div>
-    <h1 class="hero__title">Spaces that<br>hold <em>memory</em>,<br>warmth &amp; life.</h1>
-    <p class="hero__sub">A portfolio of six architectural works on healing riverside spaces, community-led renovation and urban regeneration — from Nanjing and Wuhan to Faro and Guangzhou.</p>
-    <div class="hero__meta">
-      <span>B.Arch — Wuhan Univ. of Technology</span>
-      <span>M.S. AUD — Cornell University</span>
+    <div class="hero__eyebrow">AI 产品 · 用户研究 · 2027 届</div>
+    <h1 class="hero__title">我把<em>用户洞察</em>，变成可落地的产品方案</h1>
+    <p class="hero__sub">康奈尔城市设计硕士在读，建筑学背景，做过问卷调研、评论数据挖掘和多方需求取舍，正转向 AI 产品方向。</p>
+    <div class="hero__cta">
+      <a class="btn btn--solid" href="#cases">查看案例</a>
+      <a class="btn btn--moss" href="downloads/耿想简历-产品方向.pdf" download>下载简历</a>
+      <a class="btn btn--ghost" href="#contact">联系我</a>
     </div>
   </div>
-  <div class="hero__cover reveal">
-    <img src="assets/images/00-cover.jpg" alt="Geng Xiang portfolio cover" width="1190" height="1684" fetchpriority="high">
+  <div class="hero__side">
+    <a class="hero-card hero-card--featured reveal" href="projects/ai-portfolio-reviewer.html">
+      <div class="hero-card__tag">AI 产品 · 原型已上线</div>
+      <div class="hero-card__name">AI 作品集点评助手</div>
+      <div class="hero-card__desc">上传 PDF 作品集，返回带页码证据的 Top3 修改建议——从需求定义到前端实现独立完成。</div>
+    </a>
+    <a class="hero-card reveal" href="projects/conflux-strand.html">
+      <div class="hero-card__tag">用户研究 · 数据挖掘</div>
+      <div class="hero-card__name">Conflux Strand</div>
+      <div class="hero-card__desc">从社区讨论和旅游评论挖数据，识别居民、游客、中间服务商三方需求，多情景对比做取舍。</div>
+    </a>
+    <a class="hero-card reveal" href="projects/the-topology-engine.html">
+      <div class="hero-card__tag">需求调研 · 多准则评估</div>
+      <div class="hero-card__name">The Topology Engine</div>
+      <div class="hero-card__desc">规划前后两轮问卷把方案从"一次性蓝图"改为"持续反馈"，用多准则分析做整体规划。</div>
+    </a>
   </div>
-  <div class="hero__scroll">Scroll to explore ↓</div>
 </header>
 
 <main>
-  <section class="section" id="works">
+  <section class="section" id="cases">
     <div class="section__head reveal">
-      <span class="section__index">( 01 )</span>
-      <h2 class="section__title">Selected Works</h2>
+      <span class="section__index">01</span>
+      <h2 class="section__title">产品与研究案例</h2>
     </div>
 
-    <div class="grid">
+    <div class="case-grid">
 
-      <a class="card reveal" href="projects/willow-shade-whispers.html">
-        <div class="card__media"><img src="assets/images/p01-01.jpg" alt="Willow-Shade Whispers — project cover" loading="lazy"></div>
-        <div class="card__num">01 · Nanjing, China</div>
-        <div class="card__name">Willow-Shade Whispers</div>
-        <div class="card__desc">A healing riverside space along the Qinhuai, woven from childhood memory, scent paths and soft curves.</div>
-      </a>
+      <div class="case reveal">
+        <div class="case__media"><a href="projects/ai-portfolio-reviewer.html"><img src="assets/images/app-reviewer-home.jpg" alt="AI 作品集点评助手主界面" loading="lazy"></a></div>
+        <div class="case__body">
+          <div class="case__tags">
+            <span class="tag tag--moss">AI 产品</span>
+            <span class="tag tag--moss">原型已上线</span>
+            <span class="tag">独立完成</span>
+          </div>
+          <h3 class="case__name"><a href="projects/ai-portfolio-reviewer.html">AI 作品集点评助手</a></h3>
+          <p class="case__desc">求职与申请者的作品集长期缺乏专业反馈。我独立完成一个单页产品：上传 PDF 后在本地渲染页面截图，调用大模型返回带页码证据、具体改法与置信度的 Top3 建议；无 API Key 时提供演示模式。纯前端实现，API Key 仅存浏览器本地，隐私优先。</p>
+          <a class="case__link" href="projects/ai-portfolio-reviewer.html">查看完整案例 →</a>
+        </div>
+      </div>
 
-      <a class="card reveal" href="projects/conflux-strand.html">
-        <div class="card__media"><img src="assets/images/p02-01.jpg" alt="Conflux Strand — project cover" loading="lazy"></div>
-        <div class="card__num">02 · Faro, Portugal</div>
-        <div class="card__name">Conflux Strand</div>
-        <div class="card__desc">Adaptive renovation of an old harbour, reconnecting streets and blending the journeys of locals and visitors.</div>
-      </a>
+      <div class="case reveal">
+        <div class="case__media"><a href="projects/conflux-strand.html"><img src="assets/images/p02-01.jpg" alt="Conflux Strand 案例封面" loading="lazy"></a></div>
+        <div class="case__body">
+          <div class="case__tags">
+            <span class="tag tag--moss">用户研究</span>
+            <span class="tag">数据挖掘</span>
+            <span class="tag">学术项目</span>
+          </div>
+          <h3 class="case__name"><a href="projects/conflux-strand.html">Conflux Strand</a></h3>
+          <p class="case__desc">从社区讨论和旅游评论中挖掘数据，识别居民、游客、中间服务商三方对历史、生态、美学、社交四种价值的真实需求；用多情景对比评估各方案的价值达成度，落到公共花园、街道激活等具体方案。</p>
+          <a class="case__link" href="projects/conflux-strand.html">查看完整案例 →</a>
+        </div>
+      </div>
 
-      <a class="card reveal" href="projects/legacy-in-current.html">
-        <div class="card__media"><img src="assets/images/p03-01.jpg" alt="Legacy in Current — project cover" loading="lazy"></div>
-        <div class="card__num">03 · Zunyi, China</div>
-        <div class="card__name">Legacy in Current</div>
-        <div class="card__desc">A quiet memorial hall by the Chishui River, turning history and collective memory into tangible emotion.</div>
-      </a>
+      <div class="case reveal">
+        <div class="case__media"><a href="projects/the-topology-engine.html"><img src="assets/images/p05-01.jpg" alt="The Topology Engine 案例封面" loading="lazy"></a></div>
+        <div class="case__body">
+          <div class="case__tags">
+            <span class="tag tag--moss">需求调研</span>
+            <span class="tag">多准则评估</span>
+            <span class="tag">学术项目</span>
+          </div>
+          <h3 class="case__name"><a href="projects/the-topology-engine.html">The Topology Engine</a></h3>
+          <p class="case__desc">设计并实施规划前后两轮线上问卷（需求锚定 + 成效验证），把方案从"一次性蓝图"改为"持续反馈"；主导交通、用地、建筑质量等多准则分析，统筹多方约束整合为整体规划。</p>
+          <a class="case__link" href="projects/the-topology-engine.html">查看完整案例 →</a>
+        </div>
+      </div>
 
-      <a class="card reveal" href="projects/embrace-the-murmur-of-childhood.html">
-        <div class="card__media"><img src="assets/images/p04-01.jpg" alt="Embrace the Murmur of Childhood — project cover" loading="lazy"></div>
-        <div class="card__num">04 · Wuhan, China</div>
-        <div class="card__name">Embrace the Murmur of Childhood</div>
-        <div class="card__desc">A kindergarten by Nanhu Lake, a courtyard tenderly woven by embrace, where innocent susurrations bloom.</div>
-      </a>
+    </div>
+  </section>
 
-      <a class="card reveal" href="projects/the-topology-engine.html">
-        <div class="card__media"><img src="assets/images/p05-01.jpg" alt="The Topology Engine — project cover" loading="lazy"></div>
-        <div class="card__num">05 · Guangzhou, China</div>
-        <div class="card__name">The Topology Engine</div>
-        <div class="card__desc">Territorial spatial planning through topological regeneration at Guangzhou's industrial-heritage riverside.</div>
-      </a>
+  <section class="section" id="design-bg" style="padding-top:2vh;">
+    <div class="section__head reveal">
+      <span class="section__index">02</span>
+      <h2 class="section__title">设计背景</h2>
+      <p class="section__note">建筑学五年积累的空间与研究方法，作为转型底座。</p>
+    </div>
 
-      <a class="card reveal" href="projects/communis-facens.html">
-        <div class="card__media"><img src="assets/images/p06-01.jpg" alt="Communis Facens — project cover" loading="lazy"></div>
-        <div class="card__num">06 · Wuhan, China</div>
-        <div class="card__name">Communis Facens</div>
-        <div class="card__desc">Residents-led, minimal-intervention renovation: a vertical green ascent in a tight urban community.</div>
-      </a>
+    <div class="bg-collapse reveal" id="bg-collapse">
+      <button class="bg-collapse__trigger" type="button" aria-expanded="false">
+        <span>查看 4 个建筑设计作品（疗愈空间 / 纪念性 / 幼儿园 / 社区改造）</span>
+        <span>展开 ▼</span>
+      </button>
+      <div class="bg-collapse__panel">
+        <div class="bg-grid">
 
+          <a class="bg-card" href="projects/design/willow-shade-whispers.html">
+            <div class="bg-card__media"><img src="assets/images/p01-01.jpg" alt="Willow-Shade Whispers" loading="lazy"></div>
+            <div class="bg-card__name">Willow-Shade Whispers</div>
+            <div class="bg-card__meta">疗愈滨水空间 · 南京</div>
+          </a>
+
+          <a class="bg-card" href="projects/design/legacy-in-current.html">
+            <div class="bg-card__media"><img src="assets/images/p03-01.jpg" alt="Legacy in Current" loading="lazy"></div>
+            <div class="bg-card__name">Legacy in Current</div>
+            <div class="bg-card__meta">纪念性建筑 · 遵义</div>
+          </a>
+
+          <a class="bg-card" href="projects/design/embrace-the-murmur-of-childhood.html">
+            <div class="bg-card__media"><img src="assets/images/p04-01.jpg" alt="Embrace the Murmur of Childhood" loading="lazy"></div>
+            <div class="bg-card__name">Embrace the Murmur of Childhood</div>
+            <div class="bg-card__meta">幼儿园 · 武汉</div>
+          </a>
+
+          <a class="bg-card" href="projects/design/communis-facens.html">
+            <div class="bg-card__media"><img src="assets/images/p06-01.jpg" alt="Communis Facens" loading="lazy"></div>
+            <div class="bg-card__name">Communis Facens</div>
+            <div class="bg-card__meta">社区改造 · 武汉</div>
+          </a>
+
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section about" id="about">
     <div class="section__head reveal">
-      <span class="section__index">( 02 )</span>
-      <h2 class="section__title">About</h2>
+      <span class="section__index">03</span>
+      <h2 class="section__title">关于我</h2>
     </div>
     <div class="about__cols">
       <p class="about__lead reveal">
-        I am an architect who believes the gentlest spaces matter most. My work grows from
-        <strong>memory and human stories</strong> — healing riverbanks, community life, children's
-        growth — and translates them into calm, precise architecture and urban design.
+        建筑师出身，康奈尔高级城市设计硕士在读。做设计这几年，最让我有成就感的不是画图本身，而是搞明白<strong>使用者是谁、真正需要什么、多个目标之间怎么取舍</strong>——这也是我想转产品方向的原因。我习惯用数据和证据说话：独立做过问卷调研、社交媒体数据挖掘和多方需求分析，也亲手把一个想法做成能上线的东西（原生前端 + Git + GitHub Pages 部署），还能搭生成式 AI 工作流。
       </p>
       <div class="about__blocks">
         <div class="blk reveal">
-          <h4>Education</h4>
-          <p>B.Arch — Wuhan University of Technology · GPA 3.449</p>
-          <p>M.S. in Advanced Urban Design (MSAUD) — Cornell University · currently pursuing</p>
+          <h4>教育</h4>
+          <p>Cornell University · 高级城市设计硕士（M.S. AUD）在读</p>
+          <p>武汉理工大学 · 建筑学工学学士（B.Arch）· GPA 3.449</p>
+          <p style="font-size:13px;color:var(--faint);">导师 Jesse LeCavalier（基础设施与城市系统）、Nitsan Bartov（生成式 AI 与数据驱动设计）；研究方向：AI 辅助设计、数据驱动分析、AI 伦理</p>
         </div>
         <div class="blk reveal">
-          <h4>Software</h4>
+          <h4>工具</h4>
           <ul>
-            <li>Rhino</li>
-            <li>Revit</li>
-            <li>ArchiCAD</li>
-            <li>Grasshopper</li>
-            <li>AutoCAD</li>
-            <li>Adobe Suite</li>
+            <li>Midjourney</li>
+            <li>Stable Diffusion</li>
+            <li>AI 编程工具</li>
+            <li>Figma</li>
+            <li>Git / GitHub Pages</li>
+            <li>HTML / CSS / JavaScript</li>
+          </ul>
+          <ul style="margin-top:10px;">
+            <li class="is-sub">Rhino</li>
+            <li class="is-sub">Grasshopper</li>
+            <li class="is-sub">Revit</li>
+            <li class="is-sub">SketchUp</li>
+            <li class="is-sub">AutoCAD</li>
+            <li class="is-sub">Adobe 系列</li>
           </ul>
         </div>
         <div class="blk reveal">
-          <h4>Certificates &amp; Focus</h4>
+          <h4>研究焦点</h4>
           <ul>
-            <li>Sketch · Level 7</li>
-            <li>Calligraphy · Level 10</li>
-            <li>Guitar · Level 4</li>
-            <li>Sustainable &amp; net-zero design</li>
-            <li>Community-care architecture</li>
-            <li>Qualitative research methods</li>
+            <li>定性研究方法</li>
+            <li>用户研究</li>
+            <li>需求分析与取舍</li>
+            <li>AI 辅助设计</li>
           </ul>
         </div>
       </div>
@@ -136,21 +201,23 @@
   </section>
 
   <section class="contact" id="contact">
-    <h2 class="contact__title reveal">Let's build<br>something <em>gentle</em>.</h2>
+    <h2 class="contact__title reveal">欢迎<em>聊聊</em></h2>
+    <p class="contact__sub reveal">正在寻找 AI 产品 / 产品经理方向的实习与秋招机会，2026 年 12 月可回国线下。</p>
     <div class="contact__links reveal">
-      <a class="btn" href="mailto:xg366@cornell.edu">Email me</a>
-      <a class="btn btn--moss" href="downloads/Geng-Xiang-Portfolio.pdf" download>Download PDF portfolio</a>
-      <a class="btn" href="https://www.linkedin.com/in/xiang-geng-a7b08b430" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn--solid" href="mailto:xg366@cornell.edu">邮箱 · xg366@cornell.edu</a>
+      <a class="btn" href="https://github.com/xg366-source" target="_blank" rel="noopener">GitHub · xg366-source</a>
+      <a class="btn btn--moss" href="downloads/耿想简历-产品方向.pdf" download>下载产品简历</a>
+      <a class="btn btn--ghost" href="downloads/Geng-Xiang-Portfolio.pdf" download>建筑作品集 PDF（次要）</a>
     </div>
   </section>
 </main>
 
 <footer class="footer">
-  <span>© <span data-year>2026</span> Geng Xiang</span>
-  <span>Architecture Portfolio · 2023–2026</span>
+  <span>© <span data-year>2026</span> 耿想</span>
+  <span>AI 产品 · 用户研究作品集</span>
 </footer>
 
-<button class="to-top" aria-label="Back to top">↑</button>
+<button class="to-top" aria-label="回到顶部">↑</button>
 
 <script src="assets/js/main.js"></script>
 </body>

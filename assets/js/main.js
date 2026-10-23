@@ -36,6 +36,17 @@
     });
   }
 
+  /* Design background collapsible */
+  var collapse = document.querySelector('.bg-collapse');
+  if (collapse) {
+    var trigger = collapse.querySelector('.bg-collapse__trigger');
+    trigger.addEventListener('click', function () {
+      var open = collapse.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      trigger.querySelector('span:last-child').textContent = open ? '收起 ▲' : '展开 ▼';
+    });
+  }
+
   /* Footer year */
   var year = document.querySelector('[data-year]');
   if (year) year.textContent = new Date().getFullYear();
