@@ -55,6 +55,13 @@
 </header>
 
 <main>
+  <section class="evidence-strip" style="display:flex;flex-wrap:wrap;gap:10px 34px;justify-content:center;padding:20px 24px;border-top:1px solid var(--line,#e5e0d5);border-bottom:1px solid var(--line,#e5e0d5);font-size:15px;">
+    <span><strong>6</strong> 场真实用户访谈 · 导出 P0 产品决策</span>
+    <span><strong>2</strong> 个可运行的 AI 产品（已上线 / 本地可复现）</span>
+    <span><strong>113</strong> 个 census tract 的 GIS 数据管线</span>
+    <span><strong>12</strong> 题种子评估集全过（扩至 40 题中）</span>
+  </section>
+
   <section class="section" id="cases">
     <div class="section__head reveal">
       <span class="section__index">01</span>
@@ -74,6 +81,21 @@
           <h3 class="case__name"><a href="projects/ai-portfolio-reviewer.html">AI 作品集点评助手</a></h3>
           <p class="case__desc">求职与申请者的作品集长期缺乏专业反馈。我独立完成一个单页产品：上传 PDF 后在本地渲染页面截图，调用大模型返回带页码证据、具体改法与置信度的 Top3 建议；无 API Key 时提供演示模式。纯前端实现，API Key 仅存浏览器本地，隐私优先。</p>
           <a class="case__link" href="projects/ai-portfolio-reviewer.html">查看完整案例 →</a>
+        </div>
+      </div>
+
+      <div class="case reveal">
+        <div class="case__media"><a href="projects/planning-site-assistant.html" style="display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:linear-gradient(135deg,#3f6212,#84cc16);color:#fff;text-decoration:none;"><span style="font-size:clamp(20px,2.6vw,30px);font-weight:700;letter-spacing:.06em;text-align:center;line-height:1.5;">规划 × GIS × RAG<br><span style="font-size:.55em;font-weight:400;opacity:.85;">带引用 · 可拒答 · 可评估</span></span></a></div>
+        <div class="case__body">
+          <div class="case__tags">
+            <span class="tag tag--moss">AI 工程</span>
+            <span class="tag tag--moss">RAG</span>
+            <span class="tag">评估驱动</span>
+            <span class="tag">独立完成</span>
+          </div>
+          <h3 class="case__name"><a href="projects/planning-site-assistant.html">规划资料与场地分析助手</a></h3>
+          <p class="case__desc">把规划文件和 GIS 数据建成可检索资料库：回答基地问题时给出引用来源（文件·章节 / 图层·GEOID），没有依据就明确拒答；数字类问题走结构化 GIS 查询、不让模型猜数。用一组有标准答案的测试题评估引用正确性、检索相关性和拒答能力，并公开失败案例——种子集 12 题已跑通，Recall@5 与拒答准确率均为 1.0（题量有限，扩至 40 题中）。</p>
+          <a class="case__link" href="projects/planning-site-assistant.html">查看完整案例 →</a>
         </div>
       </div>
 

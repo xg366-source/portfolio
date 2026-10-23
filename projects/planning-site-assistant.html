@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>规划资料与场地分析助手 — 耿想作品集</title>
+<meta name="description" content="规划资料与场地分析助手：规划文件 + GIS 数据的可检索资料库，回答带引用、无依据拒答，并用标准答案测试集评估引用、检索与拒答。">
+<meta property="og:title" content="规划资料与场地分析助手 — 案例">
+<meta property="og:description" content="RAG + GIS 结构化查询的基地问答系统：带引用、可拒答、用评估集量化效果，并公开失败案例。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='Georgia,serif'>G</text></svg>">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav__logo" href="../index.html">耿想<em> · Portfolio</em></a>
+  <div class="nav__links">
+    <a href="../index.html#cases">案例</a>
+    <a href="../index.html#about">关于</a>
+    <a href="../index.html#contact">联系</a>
+  </div>
+</nav>
+
+<header class="p-hero">
+  <div class="p-hero__num reveal">案例 02 · AI 工程</div>
+  <h1 class="p-hero__title reveal">规划资料与场地分析助手</h1>
+  <p class="p-hero__sub reveal">查基地资料不用再翻几十份 PDF：问答带引用、没依据就拒答、数字不让模型猜——而且效果用测试集说话，不凭感觉。</p>
+  <div class="p-hero__facts reveal">
+    <div class="fact"><div class="fact__label">我的角色</div><div class="fact__value">独立完成（数据管线 → 检索/查询 → 评估）</div></div>
+    <div class="fact"><div class="fact__label">技术栈</div><div class="fact__value">Python · BM25 检索 · GIS 结构化查询 · FastAPI · Leaflet</div></div>
+    <div class="fact"><div class="fact__label">状态</div><div class="fact__value">本地可运行 · 代码已公开（见文末链接）</div></div>
+  </div>
+</header>
+
+<section class="p-intro">
+  <div class="p-intro__text reveal">
+    <p>规划前期调研最耗时的不是分析，是<em>找依据</em>：政策在 PDF 里、数据在 GIS 图层里、口径在说明文档里。这个系统把三者接成一个能问、能查、能验的助手。</p>
+  </div>
+</section>
+
+<section class="case-blocks">
+
+  <div class="cblock reveal">
+    <div class="cblock__label">背景与目标</div>
+    <div class="cblock__body">
+      <p>基地：纽约皇后区 Junction Blvd—Corona—Woodside 走廊（沿用我 Food System Atlas 项目的数据管线，113 个 census tract）。目标不是做一个“什么都能聊”的机器人，而是一个<b>只基于已收录资料作答</b>的助手：每条回答能追溯到文件章节或 GIS 要素；资料里没有的，明确说不知道。</p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">系统与架构</div>
+    <div class="cblock__body">
+      <ul>
+        <li><b>资料库</b>：规划文件按章节分块入索引（保留文件名+章节，供引用）；4 个 GIS 图层（ACS 人口 / 311 投诉 / NYPD 报案 / 餐厅卫生检查）以 GEOID 对齐</li>
+        <li><b>双路问答</b>：文档类问题走检索（BM25 基线，零 Key 可复现）；排名、中位数、单 tract 画像、相关分析等<b>数字类问题走结构化查询</b>，由代码直接算图层属性</li>
+        <li><b>拒答机制</b>：检索分数与词覆盖双信号低于阈值即拒答，阈值用评估集中的无答案题校准</li>
+        <li><b>界面</b>：FastAPI 提供 /ask 接口；网页左侧 Leaflet 地图可切换四个指标图层，右侧问答面板展示答案与引用</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">关键决策</div>
+    <div class="cblock__body">
+      <ul>
+        <li><b>数字不经模型</b>：LLM 不负责算数。“哪个 tract 311 投诉最高”由结构化查询计算，引用到图层 + GEOID</li>
+        <li><b>方法护栏写进系统</b>：每千人比率排名默认只算人口 ≥2,000 的 tract——原始榜首是一个 344 人的 tract，比率被小分母放大，报它“问题最严重”是方法错误；这个理由同时写进回答本身</li>
+        <li><b>不用微调</b>：问题是“资料检索与引用”，不是“教模型新知识”，RAG 可解则不微调</li>
+        <li><b>无 Key 演示模式明确标注</b>：抽取式返回检索原文 + 引用，响应里标明模式，不伪装成生成结果</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">评估</div>
+    <div class="cblock__body">
+      <p>先建尺子再调系统：测试集每题标注标准答案与应引来源，分五类——文档事实、GIS 排名/画像、跨源相关、无答案（应拒答）、口径陷阱。种子集 12 题结果：</p>
+      <ul>
+        <li>Recall@5（应引来源命中）：<b>1.00</b></li>
+        <li>答案关键值命中率：<b>1.00</b></li>
+        <li>拒答准确率：<b>1.00</b>；过度拒答率：<b>0.00</b></li>
+      </ul>
+      <p>如实标注局限：题量小、自编题存在偏差，这组数字只证明流程与口径跑通。下一步扩到 40 题，并做 BM25 与向量检索的对照实验——同一把尺子，才比得出提升。</p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">失败案例</div>
+    <div class="cblock__body">
+      <ul>
+        <li><b>引用张冠李戴</b>：311 排名的答案曾引用人口图层，而非产出该指标的 311 图层（字段来自合并属性表）。修复字段→图层映射后，评估 Recall 从 0.89 升到 1.00。教训：引用“存在”不等于引用“正确”，评估必须核来源归属</li>
+        <li><b>小分母霸榜</b>：见“关键决策”——已加人口门槛并把口径写进回答</li>
+        <li><b>诚实的“不支持”</b>：直觉上“西裔占比高的区域餐厅评级更差”，实测相关系数 r = 0.06，数据不支持。系统按数据回答，不顺着提问者的叙事编故事</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">结果与下一步</div>
+    <div class="cblock__body">
+      <p>系统已在本地完整跑通：命令行演示、5 个核心行为测试、评估脚本、地图界面与 API 均验证可用。代码与数据清单公开在本站仓库：<a href="https://github.com/xg366-source/portfolio/tree/main/planning-site-assistant" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">GitHub 查看代码 →</a></p>
+      <p>下一步：评估集扩至 40 题；接入向量检索做对照；接 LLM 生成模式（提示词已按“有引才答、无据拒答”写好，待 API Key）。</p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">我的角色与复盘</div>
+    <div class="cblock__body">
+      <p>独立完成：数据管线复用与整理、分块与检索、GIS 查询、拒答阈值、评估集与评估脚本、地图界面。复盘：这个项目让我确认了一件事——AI 产品的可信度不来自“回答得像人”，而来自引用可核、错误可测、边界可说清。这也是我接下来做每个 AI 功能都会先建评估集的原因。</p>
+    </div>
+  </div>
+
+</section>
+
+<nav class="p-nav">
+  <a class="p-nav__item" href="ai-portfolio-reviewer.html"><span>上一个 · 案例 01</span>← AI 作品集点评助手</a>
+  <a class="p-nav__item" href="conflux-strand.html"><span>下一个 · 案例 03</span>Conflux Strand →</a>
+</nav>
+
+<footer class="footer">
+  <span>© <span data-year>2026</span> 耿想</span>
+  <span>AI 产品 · 用户研究作品集</span>
+</footer>
+
+<button class="to-top" aria-label="回到顶部">↑</button>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

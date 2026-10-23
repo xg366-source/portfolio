@@ -1,0 +1,8 @@
+# Core engine (ingest / retriever / GIS / eval) runs on the stdlib + PyYAML alone.
+PyYAML>=6.0
+# Web API only:
+fastapi>=0.110
+uvicorn>=0.29
+pydantic>=2.0
+# Optional: PDF ingestion
+# PyMuPDF>=1.24

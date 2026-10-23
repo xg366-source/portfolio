@@ -1,0 +1,113 @@
+{
+ "metrics": {
+  "recall_at_k": 1.0,
+  "answer_contains_rate": 1.0,
+  "refusal_accuracy": 1.0,
+  "over_refusal_rate": 0.0,
+  "hallucination_risk_questions": 0
+ },
+ "rows": [
+  {
+   "id": "doc-01",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-02",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-03",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-04",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-01",
+   "category": "gis_rank",
+   "refused": false,
+   "route": "gis_rank",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-02",
+   "category": "gis_profile",
+   "refused": false,
+   "route": "gis_profile",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-03",
+   "category": "gis_correlation",
+   "refused": false,
+   "route": "gis_correlation",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-04",
+   "category": "gis_median",
+   "refused": false,
+   "route": "gis_median",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-01",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-02",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-03",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "trap-01",
+   "category": "trap",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  }
+ ]
+}

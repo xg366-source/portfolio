@@ -1,0 +1,11 @@
+# Thresholds are calibrated against eval/questions.jsonl (see eval/README).
+docs_dir: data/docs
+gis_dir: data/gis
+retrieval:
+  top_k: 5
+  min_score: 2.0      # BM25 top-hit score below this -> refuse
+  min_coverage: 0.30  # share of query terms that must appear in the top chunk
+llm:
+  provider: deepseek        # or openai; key is read from the env var below, never stored here
+  api_key_env: ""           # e.g. DEEPSEEK_API_KEY — empty = extractive demo mode
+  model: deepseek-chat

@@ -1,0 +1,12 @@
+{"id": "doc-01", "category": "doc_fact", "question": "研究范围包含多少个 census tract，总人口是多少？", "expected_answer": "113 个 tract，总人口 396,050", "expected_source": "site_overview", "answerable": true, "must_contain": "396,050"}
+{"id": "doc-02", "category": "doc_fact", "question": "犯罪图层是定罪数据吗？时间范围是什么？", "expected_answer": "不是，是报案记录；2026年1-7月", "expected_source": "data_notes", "answerable": true, "must_contain": "报案"}
+{"id": "doc-03", "category": "doc_fact", "question": "餐厅卫生评级 A 级的分数标准是什么？", "expected_answer": "扣分 ≤13 分为 A 级", "expected_source": "data_notes", "answerable": true, "must_contain": "13"}
+{"id": "doc-04", "category": "doc_fact", "question": "311 投诉数量最多的类型是什么？有多少起？", "expected_answer": "违停 Illegal Parking，18,220 起", "expected_source": "data_notes", "answerable": true, "must_contain": "18,220"}
+{"id": "gis-01", "category": "gis_rank", "question": "311投诉最高的tract是哪个？", "expected_answer": "人口≥2000 的 tract 中 GEOID 36081028500，每千人 465.8 起", "expected_source": "311_by_tract_2026ytd.geojson", "answerable": true, "must_contain": "36081028500"}
+{"id": "gis-02", "category": "gis_profile", "question": "tract 36081024300 的西裔占比是多少？", "expected_answer": "45.0%", "expected_source": "36081024300", "answerable": true, "must_contain": "45.0"}
+{"id": "gis-03", "category": "gis_correlation", "question": "西裔占比高的区域，餐厅B级以下占比也更高吗？两者相关吗？", "expected_answer": "r≈0.06，数据不支持该说法", "expected_source": "相关分析", "answerable": true, "must_contain": "不支持"}
+{"id": "gis-04", "category": "gis_median", "question": "各 tract 报案数的中位数是多少（每千人）？", "expected_answer": "20.3 起/千人", "expected_source": "crime_by_tract_2026ytd.geojson", "answerable": true, "must_contain": "20.3"}
+{"id": "ref-01", "category": "refusal", "question": "这个基地附近的地铁票价是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "ref-02", "category": "refusal", "question": "上海静安区的人口密度是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "ref-03", "category": "refusal", "question": "2030 年该走廊的规划人口目标是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "trap-01", "category": "trap", "question": "为什么小人口 tract 的每千人比率排名不可靠？", "expected_answer": "分母太小会放大比率；本项目排名设人口≥2000 门槛", "expected_source": "data_notes", "answerable": true, "must_contain": "分母"}
