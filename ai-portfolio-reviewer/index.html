@@ -358,6 +358,16 @@
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
       }
+    
+      .exp-adopt { border-top: 1px dashed var(--ink); margin-top: 14px; padding-top: 12px; display: grid; gap: 8px; }
+      .exp-adopt .mini-label { font-size: 11px; letter-spacing: .06em; opacity: .75; }
+      .exp-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+      .exp-btns button { border: 2px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 6px 12px; cursor: pointer; font-size: 13px; }
+      .exp-btns button.on { background: var(--green); color: #fff; }
+      .exp-reason { border: 1.5px solid var(--ink); border-radius: 8px; padding: 8px 10px; font-size: 13px; width: 100%; }
+      .exp-saved { font-size: 12px; opacity: .75; }
+      .exp-export { border: 2px solid var(--ink); background: var(--yellow); border-radius: 999px; padding: 8px 14px; cursor: pointer; font-size: 13px; margin-top: 10px; }
+      .exp-note { font-size: 12px; opacity: .75; margin-top: 6px; line-height: 1.6; }
     </style>
   </head>
   <body>
@@ -686,6 +696,7 @@
           '<div class="action-note"><span class="mini-label">' + (demo ? "示例 · 改法会长这样" : "可以这样改") + '</span><p>' + esc(item.action) + '</p>' +
             '<div class="action-meta"><span>' + esc(effortLabel(item.effort)) + '</span><span>' + (item.structural ? "涉及结构调整" : "局部可逆修改") + '</span></div>' +
           '</div>' +
+          expAdoptionHTML(review, item) +
           '<div class="scope-note"><b>' + esc(scopeTitle) + '</b><span>' + esc(item.scope_limit) + '</span></div>' +
           '<div class="detail-nav">' +
             '<button type="button" id="prev-finding"' + (state.activeFinding === 0 ? " disabled" : "") + '>上一条</button>' +
@@ -699,6 +710,8 @@
           '<div><b>覆盖说明</b><p>' + esc(review.coverage_note) + '</p></div>' +
           '<div><b>使用边界</b><p>' + esc(review.boundary_note) + '</p></div>' +
           '<p class="human-check">重大调整请再找导师或行业人士复核。</p>' +
+          '<button type="button" class="exp-export" id="exp-export-btn">导出匿名使用记录（JSON）</button>' +
+          '<p class="exp-note">只含：点评耗时、建议查看记录、你的采纳标记与原因。不含文件名、PDF 内容与 API Key。导出后把文件发给作者，即完成本次实验的数据回收。</p>' +
         '</aside>';
       }
 
@@ -1021,6 +1034,7 @@
         state.review = review;
         state.activeFinding = 0;
         state.previews = previews;
+        expFinish(review);
         setTimeout(function () {
           state.stage = "report";
           renderView();
@@ -1028,6 +1042,7 @@
         }, 320);
       }
       function startAnalysis() {
+        expStart();
         if (!state.file) {
           showError("请先选择一份 PDF 作品集。");
           openPicker();
@@ -1170,6 +1185,7 @@
         qs("#start-btn").addEventListener("click", startAnalysis);
       }
       function wireReport() {
+        wireExpView();
         var back = qs("#back-compose");
         if (back) back.addEventListener("click", resetCompose);
         var rkb = qs("#ribbon-key-btn");
@@ -1217,6 +1233,92 @@
         d.textContent = msg;
         qs("#toast-root").appendChild(d);
         setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 2400);
+      }
+
+
+      /* ============ 实验埋点（真实用户闭环，2026-10-27） ============
+         只记本地 localStorage，不上传任何内容、不含文件名与 Key。
+         记三类事：单份点评耗时、每条建议被查看过、每条建议的采纳标记。
+         参与者点「导出匿名使用记录」后把 JSON 发给作者，即完成数据回收。 */
+      var EXP_KEY = "ai3.exp_events";
+      var ADOPT_KEY = "ai3.exp_adoption";
+      function expLoad(k) { try { return JSON.parse(store.get(k) || "null"); } catch (e) { return null; } }
+      function expSave(k, v) { try { store.set(k, JSON.stringify(v)); } catch (e) { /* ignore */ } }
+      function expStart() { state.expStart = Date.now(); }
+      function expFinish(review) {
+        if (!state.expStart || !review) return;
+        var ev = expLoad(EXP_KEY) || [];
+        ev.push({ type: "session", reviewId: review.id, isDemo: !!review.is_demo,
+          mode: review.mode, deadlineDays: review.deadline_days,
+          durationSec: Math.round((Date.now() - state.expStart) / 1000),
+          ts: new Date().toISOString() });
+        expSave(EXP_KEY, ev);
+        state.expStart = null;
+      }
+      function expLogView(reviewId, rank) {
+        var ev = expLoad(EXP_KEY) || [];
+        ev.push({ type: "view", reviewId: reviewId, rank: rank, ts: new Date().toISOString() });
+        expSave(EXP_KEY, ev);
+      }
+      function expGetAdoption(reviewId, rank) {
+        var all = expLoad(ADOPT_KEY) || {};
+        return all[reviewId + ":" + rank] || null;
+      }
+      function expSetAdoption(reviewId, rank, value, reason) {
+        var all = expLoad(ADOPT_KEY) || {};
+        var cur = all[reviewId + ":" + rank] || {};
+        if (value != null) cur.value = value;
+        if (reason !== undefined) cur.reason = reason;
+        cur.ts = new Date().toISOString();
+        all[reviewId + ":" + rank] = cur;
+        expSave(ADOPT_KEY, all);
+      }
+      function expExport() {
+        var data = { exportedAt: new Date().toISOString(),
+          sessions: (expLoad(EXP_KEY) || []).filter(function (e) { return e.type === "session"; }),
+          views: (expLoad(EXP_KEY) || []).filter(function (e) { return e.type === "view"; }),
+          adoptions: expLoad(ADOPT_KEY) || {} };
+        var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "portfolio-reviewer-usage-anonymous.json";
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+        toast("匿名使用记录已导出（只含耗时、查看与采纳标记，没有你的文件与 Key）");
+      }
+      function expAdoptionHTML(review, item) {
+        var cur = expGetAdoption(review.id, item.rank) || {};
+        var labels = { will: "会采纳", wont: "不会采纳", na: "不适用", done: "已按这条改了" };
+        var btns = ["will", "wont", "na", "done"].map(function (v) {
+          return '<button type="button" data-exp-adopt="' + v + '" class="' + (cur.value === v ? "on" : "") + '">' + labels[v] + '</button>';
+        }).join("");
+        return '<div class="exp-adopt"><span class="mini-label">实验反馈 · 这条建议对你有用吗？（只存你本机，点「导出」才发给作者；7 天后改了可以回来改成「已按这条改了」）</span>' +
+          '<div class="exp-btns">' + btns + '</div>' +
+          '<input class="exp-reason" data-exp-reason placeholder="一句话原因（可选）：比如“改法不够具体”" value="' + esc(cur.reason || "") + '" />' +
+          '<span class="exp-saved" data-exp-saved>' + (cur.value ? "已记录：你选了「" + labels[cur.value] + "」" : "") + '</span></div>';
+      }
+      function wireExpView() {
+        var review = state.review;
+        if (!review) return;
+        expLogView(review.id, state.activeFinding);
+        var item = review.findings[state.activeFinding] || review.findings[0];
+        if (!item) return;
+        var labels = { will: "会采纳", wont: "不会采纳", na: "不适用", done: "已按这条改了" };
+        qsa("[data-exp-adopt]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            var v = b.getAttribute("data-exp-adopt");
+            expSetAdoption(review.id, item.rank, v);
+            qsa("[data-exp-adopt]").forEach(function (x) { x.classList.toggle("on", x === b); });
+            var saved = qs("[data-exp-saved]");
+            if (saved) saved.textContent = "已记录：你选了「" + labels[v] + "」";
+          });
+        });
+        var reason = qs("[data-exp-reason]");
+        if (reason) reason.addEventListener("change", function () {
+          expSetAdoption(review.id, item.rank, null, reason.value);
+        });
+        var ex = qs("#exp-export-btn");
+        if (ex) ex.addEventListener("click", expExport);
       }
 
       /* ============ PDF.js 初始化 ============ */
