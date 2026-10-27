@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>规划资料与场地分析助手 · 在线演示 — 耿想作品集</title>
+<meta name="description" content="零服务器、零 API key 的基地问答演示：规划文件 + GIS 数据可检索，回答带引用、无依据拒答、数字走结构化查询。全部在浏览器本地运行。">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Noto Sans CJK SC",system-ui,sans-serif; color:#232b25; background:#faf7f0; }
+  a { color:#2e4429; }
+  header.top { padding:18px 22px 14px; border-bottom:2px solid #47603d; }
+  header.top h1 { font-family:"Noto Serif CJK SC",serif; font-size:22px; }
+  header.top p { color:#55645a; font-size:14px; margin-top:6px; line-height:1.6; }
+  header.top nav { margin-top:8px; font-size:13px; }
+  header.top nav a { margin-right:14px; }
+  .badge { display:inline-block; background:#fff4e5; border:1px solid #f0c36d; border-radius:20px; padding:2px 10px; font-size:12px; margin-left:8px; }
+  main { display:flex; height:calc(100vh - 118px); min-height:560px; }
+  #map { flex:1.35; min-width:0; }
+  #panel { flex:1; display:flex; flex-direction:column; border-left:1px solid #e5e0d5; background:#fff; min-width:0; }
+  #panel .bar { padding:12px 14px; border-bottom:1px solid #eee; font-size:13px; }
+  #panel .bar label { font-weight:700; }
+  #panel .bar select { margin-left:6px; padding:4px; }
+  #status { padding:10px 14px; font-size:13px; color:#55645a; border-bottom:1px solid #eee; line-height:1.6; }
+  #log { flex:1; overflow-y:auto; padding:16px; }
+  .msg { margin-bottom:14px; line-height:1.7; font-size:15px; }
+  .msg.refused { background:#fff4e5; border:1px solid #f0c36d; border-radius:10px; padding:10px 12px; }
+  .cite { color:#75816f; font-size:12px; margin-top:6px; line-height:1.6; }
+  .chips { padding:0 14px 12px; display:flex; flex-wrap:wrap; gap:6px; }
+  .chips button { border:1px solid #47603d; background:#f2f5ee; color:#2e4429; border-radius:20px; padding:5px 11px; cursor:pointer; font-size:13px; }
+  .chips button:hover { background:#e2e9d8; }
+  #askbar { display:flex; gap:8px; padding:12px; border-top:1px solid #eee; }
+  #q { flex:1; padding:10px; font-size:15px; border:1px solid #ccc; border-radius:8px; }
+  #send { padding:10px 18px; font-size:15px; background:#2e4429; color:#fff; border:0; border-radius:8px; cursor:pointer; }
+  #send:disabled { opacity:.5; }
+  footer { padding:12px 22px; font-size:13px; color:#75816f; line-height:1.7; }
+  @media (max-width: 800px) {
+    main { flex-direction:column; height:auto; }
+    #map { height:52vh; flex:none; }
+    #panel { min-height:60vh; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>规划资料与场地分析助手 · 在线演示<span class="badge">抽取式演示模式 · 无需 API key</span></h1>
+  <p>基地：纽约皇后区 Junction Blvd—Corona—Woodside 走廊，113 个 census tract。问基地问题，回答带引用（文件·章节 / 图层·GEOID）；资料库外的事明确拒答；排名、中位数、相关系数等数字由代码直接算，不让模型猜。</p>
+  <nav>
+    <a href="../../index.html">← 回作品集首页</a>
+    <a href="../../projects/planning-site-assistant.html">查看完整案例</a>
+    <a href="https://github.com/xg366-source/portfolio/tree/main/planning-site-assistant" target="_blank" rel="noopener">查看代码与选型报告 →</a>
+  </nav>
+</header>
+
+<main>
+  <div id="map"></div>
+  <section id="panel">
+    <div class="bar">
+      <label>地图图层
+        <select id="layer">
+          <option value="pct_hispanic">西裔占比(%)</option>
+          <option value="req_311_per_1000">311投诉(每千人)</option>
+          <option value="crime_per_1000">报案数(每千人)</option>
+          <option value="rest_pct_below_A">餐厅B级以下占比(%)</option>
+        </select>
+      </label>
+    </div>
+    <div id="status">正在加载数据……</div>
+    <div id="log"></div>
+    <div class="chips">
+      <button data-q="311投诉最高的tract是哪个？">311 投诉最高是哪个 tract？</button>
+      <button data-q="tract 36081024300 的西裔占比是多少？">查一个 tract 的画像</button>
+      <button data-q="西裔占比高的区域，餐厅B级以下占比也更高吗？两者相关吗？">西裔占比和餐厅评级相关吗？</button>
+      <button data-q="餐厅卫生评级 A 级的分数标准是什么？">餐厅 A 级标准是什么？</button>
+      <button data-q="这个基地附近的地铁票价是多少？">问一个资料库外的问题（看拒答）</button>
+      <button data-q="为什么小人口 tract 的每千人比率排名不可靠？">小人口 tract 比率为什么不可靠？</button>
+    </div>
+    <div id="askbar">
+      <input id="q" placeholder="例如：311投诉最高的tract是哪个？" autocomplete="off">
+      <button id="send" disabled>提问</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  评估：40 题标准答案测试集端到端全过（Recall@5 1.00、拒答准确率 1.00、过度拒答 0）；BM25 与 TF-IDF 向量检索对照打平，结论是保留 BM25。数据口径：报案是报案数而非定罪数；每千人排名默认只算人口 ≥2,000 的 tract；餐厅占比排名另要求餐厅数 ≥10 家。本页全部计算在你的浏览器本地完成，不上传任何数据。
+</footer>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

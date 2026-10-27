@@ -1,0 +1,44 @@
+[
+ {
+  "chunk_id": "data_notes-001",
+  "doc": "data_notes.md",
+  "section": "犯罪图层口径",
+  "text": "犯罪图层来自 NYC Open Data《NYPD Complaint Data Current (YTD)》，为 2026 年 1–7 月的报案记录，共裁得范围内 10,714 起（重罪 3,485 / 轻罪 5,784 / 违规 1,445）。这是报案数，不是定罪数，不能直接表述为“犯罪率”。各 tract 每千人报案数中位数为 20.3 起。"
+ },
+ {
+  "chunk_id": "data_notes-002",
+  "doc": "data_notes.md",
+  "section": "311 投诉图层口径",
+  "text": "311 图层来自 NYC Open Data《311 Service Requests from 2020 to Present》，为 2026 年 1–7 月记录，范围内共 89,764 起，每千人中位数 201.8 起。类型最集中的是违停（Illegal Parking）18,220 起，其次是堵车道（Blocked Driveway）10,258 起、住宅噪音 7,118 起、暖气热水 5,695 起。"
+ },
+ {
+  "chunk_id": "data_notes-003",
+  "doc": "data_notes.md",
+  "section": "餐厅卫生检查口径",
+  "text": "餐厅图层来自 NYC Open Data《DOHMH Restaurant Inspection Results》，每家店取最新一次有分数的检查结果，范围内共 1,247 家。评级为扣分制：A 级 ≤13 分，B 级 14–27 分，C 级 ≥28 分。范围内 A 级 791 家、B 级 109 家、C 级 5 家，其余待定。各 tract 的 B 级及以下占比中位数约 30%。"
+ },
+ {
+  "chunk_id": "data_notes-004",
+  "doc": "data_notes.md",
+  "section": "小人口 tract 的比率陷阱",
+  "text": "按每千人比率排名时，人口极少的 tract（例如只有 344 人的 tract）比率会被分母放大而冲到榜首，这不代表该区域问题最严重。本项目所有比率排名默认只统计人口 ≥2,000 的 tract，餐厅占比另要求餐厅数 ≥10，并在回答中注明该口径。"
+ },
+ {
+  "chunk_id": "site_overview-001",
+  "doc": "site_overview.md",
+  "section": "研究范围",
+  "text": "研究范围位于纽约皇后区 Junction Blvd—Corona—Woodside 一带走廊，以 studio 作业 Food System Atlas 的研究边界外扩约 1.5km，共覆盖 113 个 census tract。范围内总人口 396,050 人。"
+ },
+ {
+  "chunk_id": "site_overview-002",
+  "doc": "site_overview.md",
+  "section": "人口构成",
+  "text": "范围内西裔/拉丁裔人口 192,232 人，占 48.5%；亚裔（非西裔）110,309 人，占 27.9%。空间分布呈明显梯度：东部 Corona 一带西裔占比达 70%–90%，走廊中部为过渡带，向西往 Woodside 降至约 20%。"
+ },
+ {
+  "chunk_id": "site_overview-003",
+  "doc": "site_overview.md",
+  "section": "数据来源",
+  "text": "人口图层来自 ACS 2024 五年估算 B03002 表；治安、311、餐厅卫生等图层的来源与口径见《数据口径说明》。本汇编为项目组整理资料，引用时以原始公开数据为准。"
+ }
+]
