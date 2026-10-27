@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>耿想 | AI 产品 · 用户研究作品集</title>
-<meta name="description" content="耿想——康奈尔高级城市设计硕士在读，建筑学背景，转向 AI 产品方向。做过问卷调研、评论数据挖掘和多方需求取舍，独立完成 AI 作品集点评助手原型并上线个人网站。">
-<meta property="og:title" content="耿想 | AI 产品 · 用户研究作品集">
-<meta property="og:description" content="我把用户洞察，变成可落地的产品方案。康奈尔城市设计硕士在读，建筑学背景，做过问卷调研、评论数据挖掘和多方需求取舍，正转向 AI 产品方向。">
+<title>耿想 | AI 产品经理作品集</title>
+<meta name="description" content="耿想——康奈尔高级城市设计硕士在读，建筑学背景，求职 AI 产品经理。独立完成场地调研 Agent（27 类失败模式、19 场景评测、每答成本核算）、AI 作品集点评助手（6 场用户访谈）和带引用的 RAG 助手。">
+<meta property="og:title" content="耿想 | AI 产品经理作品集">
+<meta property="og:description" content="我做敢说“不确定”的 AI 产品：先定义失败，再建评测，再迭代。康奈尔城市设计硕士在读，建筑学背景，求职 AI 产品经理。">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://xg366-source.github.io/portfolio/assets/images/app-reviewer-home.jpg">
+<meta property="og:image" content="https://xg366-source.github.io/portfolio/assets/images/agent-hero.jpg">
 <meta property="og:url" content="https://xg366-source.github.io/portfolio/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='Georgia,serif'>G</text></svg>">
 <link rel="stylesheet" href="assets/css/style.css">
@@ -26,9 +26,9 @@
 
 <header class="hero">
   <div class="hero__intro">
-    <div class="hero__eyebrow">AI 产品 · 用户研究 · 2027 届</div>
-    <h1 class="hero__title">我把<em>用户洞察</em>，变成可落地的产品方案</h1>
-    <p class="hero__sub">康奈尔城市设计硕士在读，建筑学背景，做过问卷调研、评论数据挖掘和多方需求取舍，正转向 AI 产品方向。</p>
+    <div class="hero__eyebrow">AI 产品经理 · 2027 届</div>
+    <h1 class="hero__title">我做敢说<em>“不确定”</em>的 AI 产品</h1>
+    <p class="hero__sub">康奈尔城市设计硕士在读，建筑学背景，求职 AI 产品经理。我的做法是先定义什么算失败，再建评测集，用数据推动迭代：独立做过一个带失败处理和成本核算的 Agent、一个经过用户访谈的 AI 工具，和一个带引用的 RAG 助手。</p>
     <div class="hero__cta">
       <a class="btn btn--solid" href="#cases">查看案例</a>
       <a class="btn btn--moss" href="downloads/耿想简历-产品方向.pdf" download>下载简历</a>
@@ -36,39 +36,54 @@
     </div>
   </div>
   <div class="hero__side">
-    <a class="hero-card hero-card--featured reveal" href="projects/ai-portfolio-reviewer.html">
-      <div class="hero-card__tag">AI 产品 · 原型已上线</div>
+    <a class="hero-card hero-card--featured reveal" href="projects/site-research-agent.html">
+      <div class="hero-card__tag">AI Agent · 在线展示已上线</div>
+      <div class="hero-card__name">场地调研 Agent</div>
+      <div class="hero-card__desc">自主调用 GIS、规划文件、洪水与公交工具回答选址问题。重点是失败处理：27 类失败模式、降级阶梯、每答成本核算。</div>
+    </a>
+    <a class="hero-card reveal" href="projects/ai-portfolio-reviewer.html">
+      <div class="hero-card__tag">AI 产品 · 用户研究驱动</div>
       <div class="hero-card__name">AI 作品集点评助手</div>
-      <div class="hero-card__desc">上传 PDF 作品集，返回带页码证据的 Top3 修改建议——从需求定义到前端实现独立完成。</div>
+      <div class="hero-card__desc">6 场用户访谈验证 4 个假设后定 P0：上传 PDF，返回带页码证据和置信度的 Top3 修改建议。</div>
     </a>
-    <a class="hero-card reveal" href="projects/conflux-strand.html">
-      <div class="hero-card__tag">用户研究 · 数据挖掘</div>
-      <div class="hero-card__name">Conflux Strand</div>
-      <div class="hero-card__desc">从社区讨论和旅游评论挖数据，识别居民、游客、中间服务商三方需求，多情景对比做取舍。</div>
-    </a>
-    <a class="hero-card reveal" href="projects/the-topology-engine.html">
-      <div class="hero-card__tag">需求调研 · 多准则评估</div>
-      <div class="hero-card__name">The Topology Engine</div>
-      <div class="hero-card__desc">规划前后两轮问卷把方案从"一次性蓝图"改为"持续反馈"，用多准则分析做整体规划。</div>
+    <a class="hero-card reveal" href="projects/planning-site-assistant.html">
+      <div class="hero-card__tag">RAG · 评估驱动</div>
+      <div class="hero-card__name">规划资料与场地分析助手</div>
+      <div class="hero-card__desc">Agent 的第一版：回答带引用、无依据就拒答、数字走结构化查询；40 题评估集与检索选型对照。</div>
     </a>
   </div>
 </header>
 
 <main>
   <section class="evidence-strip" style="display:flex;flex-wrap:wrap;gap:10px 34px;justify-content:center;padding:20px 24px;border-top:1px solid var(--line,#e5e0d5);border-bottom:1px solid var(--line,#e5e0d5);font-size:15px;">
-    <span><strong>6</strong> 场真实用户访谈 · 导出 P0 产品决策</span>
-    <span><strong>2</strong> 个可运行的 AI 产品（已上线 / 本地可复现）</span>
-    <span><strong>113</strong> 个 census tract 的 GIS 数据管线</span>
-    <span><strong>40</strong> 题评估集全过 + BM25/TF-IDF 对照</span>
+    <span><strong>27</strong> 类 Agent 失败模式 · 23 类来自真实服务调用</span>
+    <span><strong>19/19</strong> 评测场景 · 三轮迭代从 8/19 提升</span>
+    <span><strong>$0.043</strong> 每答中位成本 · 危险错误 0/19</span>
+    <span><strong>6</strong> 场用户访谈 · 导出 P0 产品决策</span>
   </section>
 
   <section class="section" id="cases">
     <div class="section__head reveal">
       <span class="section__index">01</span>
-      <h2 class="section__title">产品与研究案例</h2>
+      <h2 class="section__title">AI 产品案例</h2>
     </div>
 
     <div class="case-grid">
+
+      <div class="case reveal">
+        <div class="case__media"><a href="projects/site-research-agent.html"><img src="assets/images/agent-replay.jpg" alt="场地调研 Agent 调用链回放界面" loading="lazy"></a></div>
+        <div class="case__body">
+          <div class="case__tags">
+            <span class="tag tag--moss">AI Agent</span>
+            <span class="tag tag--moss">在线展示</span>
+            <span class="tag">失败处理</span>
+            <span class="tag">成本核算</span>
+          </div>
+          <h3 class="case__name"><a href="projects/site-research-agent.html">场地调研 Agent</a></h3>
+          <p class="case__desc">用户问一个选址问题，Agent 自己规划步骤，调用 City of Ithaca 分区与宗地 GIS、规则 PDF、FEMA 洪水图层和公交数据，给出带引用的回答并展示完整调用链。重点不在跑通，在出错时怎么办：工具结果分五种状态，空结果不当作否定；按降级阶梯处理超时与无覆盖；整理 27 类失败模式。19 个场景（含 9 个故障注入）三轮迭代从 8/19 到 19/19，危险错误 0/19，每答中位成本 $0.043，并发现 94% 的成本来自回答合成。</p>
+          <a class="case__link" href="projects/site-research-agent.html">查看完整案例 →</a>
+        </div>
+      </div>
 
       <div class="case reveal">
         <div class="case__media"><a href="projects/ai-portfolio-reviewer.html"><img src="assets/images/app-reviewer-home.jpg" alt="AI 作品集点评助手主界面" loading="lazy"></a></div>
@@ -79,7 +94,7 @@
             <span class="tag">独立完成</span>
           </div>
           <h3 class="case__name"><a href="projects/ai-portfolio-reviewer.html">AI 作品集点评助手</a></h3>
-          <p class="case__desc">求职与申请者的作品集长期缺乏专业反馈。我独立完成一个单页产品：上传 PDF 后在本地渲染页面截图，调用大模型返回带页码证据、具体改法与置信度的 Top3 建议；无 API Key 时提供演示模式。纯前端实现，API Key 仅存浏览器本地，隐私优先。</p>
+          <p class="case__desc">求职与申请者的作品集长期缺乏专业反馈。开发前先做 6 场用户访谈、验证 4 个假设，据此定下 P0：只给 Top3、带页码证据和置信度、不打总分。我独立完成一个单页产品：上传 PDF 后在本地渲染页面截图，调用大模型返回带页码证据、具体改法与置信度的 Top3 建议；无 API Key 时提供演示模式。纯前端实现，API Key 仅存浏览器本地，隐私优先。</p>
           <a class="case__link" href="projects/ai-portfolio-reviewer.html">查看完整案例 →</a>
         </div>
       </div>
@@ -88,8 +103,8 @@
         <div class="case__media"><a href="projects/planning-site-assistant.html" style="display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;background:linear-gradient(135deg,#3f6212,#84cc16);color:#fff;text-decoration:none;"><span style="font-size:clamp(20px,2.6vw,30px);font-weight:700;letter-spacing:.06em;text-align:center;line-height:1.5;">规划 × GIS × RAG<br><span style="font-size:.55em;font-weight:400;opacity:.85;">带引用 · 可拒答 · 可评估</span></span></a></div>
         <div class="case__body">
           <div class="case__tags">
-            <span class="tag tag--moss">AI 工程</span>
             <span class="tag tag--moss">RAG</span>
+            <span class="tag tag--moss">Agent 第一版</span>
             <span class="tag">评估驱动</span>
             <span class="tag">独立完成</span>
           </div>
@@ -98,6 +113,18 @@
           <a class="case__link" href="projects/planning-site-assistant.html">查看完整案例 →</a>
         </div>
       </div>
+
+    </div>
+  </section>
+
+  <section class="section" id="research" style="padding-top:2vh;">
+    <div class="section__head reveal">
+      <span class="section__index">02</span>
+      <h2 class="section__title">用户研究案例</h2>
+      <p class="section__note">城市设计项目里的需求调研与多方取舍，是我做产品判断的方法来源。</p>
+    </div>
+
+    <div class="case-grid">
 
       <div class="case reveal">
         <div class="case__media"><a href="projects/conflux-strand.html"><img src="assets/images/p02-01.jpg" alt="Conflux Strand 案例封面" loading="lazy"></a></div>
@@ -132,7 +159,7 @@
 
   <section class="section" id="design-bg" style="padding-top:2vh;">
     <div class="section__head reveal">
-      <span class="section__index">02</span>
+      <span class="section__index">03</span>
       <h2 class="section__title">设计背景</h2>
       <p class="section__note">建筑学五年积累的空间与研究方法，作为转型底座。</p>
     </div>
@@ -176,12 +203,12 @@
 
   <section class="section about" id="about">
     <div class="section__head reveal">
-      <span class="section__index">03</span>
+      <span class="section__index">04</span>
       <h2 class="section__title">关于我</h2>
     </div>
     <div class="about__cols">
       <p class="about__lead reveal">
-        建筑师出身，康奈尔高级城市设计硕士在读。做设计这几年，最让我有成就感的不是画图本身，而是搞明白<strong>使用者是谁、真正需要什么、多个目标之间怎么取舍</strong>——这也是我想转产品方向的原因。我习惯用数据和证据说话：独立做过问卷调研、社交媒体数据挖掘和多方需求分析，也亲手把一个想法做成能上线的东西（原生前端 + Git + GitHub Pages 部署），还能搭生成式 AI 工作流。
+        建筑师出身，康奈尔高级城市设计硕士在读。做设计这几年，最让我有成就感的不是画图本身，而是搞明白<strong>使用者是谁、真正需要什么、多个目标之间怎么取舍</strong>——这也是我想做 AI 产品经理的原因。做 AI 产品时我坚持三件事：<strong>先定义失败</strong>（什么样的错误代价最高）、<strong>先建评测</strong>（再改提示词和代码）、<strong>算清成本</strong>（每个回答花多少钱、花在哪）。我能自己把原型做出来：Python / FastAPI、大模型 API、RAG 与 Agent 工具调用、前端与部署；也做过问卷、访谈和评论数据挖掘。
       </p>
       <div class="about__blocks">
         <div class="blk reveal">
@@ -193,6 +220,10 @@
         <div class="blk reveal">
           <h4>工具</h4>
           <ul>
+            <li>Python / FastAPI</li>
+            <li>大模型 API（Claude / DeepSeek）</li>
+            <li>RAG · Agent 工具调用</li>
+            <li>评测集设计</li>
             <li>Midjourney</li>
             <li>Stable Diffusion</li>
             <li>AI 编程工具</li>
@@ -212,8 +243,8 @@
         <div class="blk reveal">
           <h4>研究焦点</h4>
           <ul>
-            <li>定性研究方法</li>
-            <li>用户研究</li>
+            <li>AI 产品评测与失败模式</li>
+            <li>用户访谈与假设验证</li>
             <li>需求分析与取舍</li>
             <li>AI 辅助设计</li>
           </ul>
@@ -224,11 +255,11 @@
 
   <section class="contact" id="contact">
     <h2 class="contact__title reveal">欢迎<em>聊聊</em></h2>
-    <p class="contact__sub reveal">正在寻找 AI 产品 / 产品经理方向的实习与秋招机会，2026 年 12 月可回国线下。</p>
+    <p class="contact__sub reveal">正在寻找 AI 产品经理 / 产品助理方向的实习：2026 年 12 月初至 2027 年 1 月中下旬可在上海、深圳、广州等城市线下全职约 5–6 周；2027 年 8 月毕业后可继续到岗。</p>
     <div class="contact__links reveal">
       <a class="btn btn--solid" href="mailto:xg366@cornell.edu">邮箱 · xg366@cornell.edu</a>
       <a class="btn" href="https://github.com/xg366-source" target="_blank" rel="noopener">GitHub · xg366-source</a>
-      <a class="btn btn--moss" href="downloads/耿想简历-产品方向.pdf" download>下载产品简历</a>
+      <a class="btn btn--moss" href="downloads/耿想简历-产品方向.pdf" download>下载简历（AI 产品经理）</a>
       <a class="btn" href="downloads/AI产品作品集-耿想.pdf" download>AI 产品作品集 PDF（高清版）</a>
       <a class="btn btn--ghost" href="downloads/Geng-Xiang-Portfolio.pdf" download>建筑作品集 PDF（次要）</a>
     </div>
@@ -237,7 +268,7 @@
 
 <footer class="footer">
   <span>© <span data-year>2026</span> 耿想</span>
-  <span>AI 产品 · 用户研究作品集</span>
+  <span>AI 产品经理作品集</span>
 </footer>
 
 <button class="to-top" aria-label="回到顶部">↑</button>

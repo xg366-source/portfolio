@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>场地调研 Agent — 耿想作品集</title>
+<meta name="description" content="场地调研 Agent：用户问一个选址问题，Agent 自己规划并调用 GIS、规划文件、洪水与公交工具，给出带引用的回答。重点是失败处理：27 类失败模式、降级阶梯、每答成本核算，19 个评测场景三轮迭代全部通过。">
+<meta property="og:title" content="场地调研 Agent — 案例">
+<meta property="og:description" content="重点不在跑通，在出错时怎么办：五态工具结果、降级阶梯、护栏误报评估、每答成本核算。">
+<meta property="og:image" content="https://xg366-source.github.io/portfolio/assets/images/agent-hero.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' font-family='Georgia,serif'>G</text></svg>">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav__logo" href="../index.html">耿想<em> · Portfolio</em></a>
+  <div class="nav__links">
+    <a href="../index.html#cases">案例</a>
+    <a href="../index.html#about">关于</a>
+    <a href="../index.html#contact">联系</a>
+  </div>
+</nav>
+
+<header class="p-hero">
+  <div class="p-hero__num reveal">案例 01 · AI Agent</div>
+  <h1 class="p-hero__title reveal">场地调研 Agent</h1>
+  <p class="p-hero__sub reveal">跑通只是起点。这个项目的重点是出错时怎么办：工具返回空、中间结果不可信、成本失控时，Agent 怎么降级，用户最终看到什么。</p>
+  <div class="p-hero__facts reveal">
+    <div class="fact"><div class="fact__label">我的角色</div><div class="fact__value">独立完成（问题定义 → 工具与降级设计 → 评测 → 展示页）</div></div>
+    <div class="fact"><div class="fact__label">技术栈</div><div class="fact__value">Python · FastAPI · Claude（规划 / 合成）· ArcGIS REST · GTFS · PDF 解析</div></div>
+    <div class="fact"><div class="fact__label">状态</div><div class="fact__value">在线展示已上线 · 代码公开</div></div>
+  </div>
+</header>
+
+<section class="p-intro">
+  <div class="p-intro__text reveal">
+    <p>选址是高代价决策。对这类问题，一个<em>看起来干净但其实没核实</em>的回答，比直接说“查不到”更危险。所以我先定义“什么算失败”，再写 Agent。</p>
+  </div>
+</section>
+
+<section class="case-blocks">
+
+  <div class="cblock reveal">
+    <div class="cblock__label">背景与目标</div>
+    <div class="cblock__body">
+      <p>这是我“规划资料助手”的第二版。第一版是 RAG：只在固定资料里检索和回答。第二版改成 Agent：用户问一个选址问题（例如“在 120 E State St 盖 6 层混合用途楼，底层开咖啡馆，可行吗？”），Agent 自己规划步骤，调用真实公开服务——City of Ithaca 分区与宗地 GIS、分区规则 PDF、FEMA 洪水图层、公交 GTFS——做确定性计算，最后给出带 [E#] 引用的回答，并展示完整调用链。</p>
+      <p>目标用户是做前期研判的规划师、开发顾问和小业主。他们要的不是一个“可行”，而是：哪些项已核实、哪些没核实、去哪里核实。</p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">关键决策</div>
+    <div class="cblock__body">
+      <ul>
+        <li><b>空结果不是否定</b>：工具返回 ok / empty / error / degraded / unverified 五种状态，而不是“有 / 没有”。洪水镜像在 Ithaca 返回 0 条，如果直接用，Agent 会说“不在洪水区”。我加了覆盖探测：同一镜像在 Binghamton 附近有 367 个要素、在 Ithaca 是 0，说明是没覆盖，不是没风险</li>
+        <li><b>降级阶梯</b>：洪水查询按 FEMA 官方图层（置信度 0.9）→ 镜像（0.6）→ 宗地字段（0.2，对应旧版图面）→ 未核实（0）逐级下降；每次降级都生成一条证据，回答必须引用，不能悄悄省略</li>
+        <li><b>结论强度不超过最弱的关键证据</b>：置信度上限取位置、宗地、分区、辖区证据的最小值；低于 0.5 时禁止输出“可行 / 不可行”</li>
+        <li><b>确定性的事不交给模型</b>：地理计算、规则表解析、容积估算都由代码完成，模型只负责规划和把证据写成人话，每个数字都能追溯</li>
+        <li><b>先判断问题本身</b>：地址不在 City 辖区就停止，不套用规则；问题没有地址就只问一个澄清问题（成本 $0.002）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">失败模式清单</div>
+    <div class="cblock__body">
+      <p>整理了 27 类失败模式，其中 23 类在调用真实服务时出现过，不是假设。每类都写明：属于哪一层（数据 / 工具 / 推理 / 产品）、检测信号、处理策略、用户看到什么、严重度。几个例子：</p>
+      <ul>
+        <li><b>同名数据集碰撞</b>：搜索 “TCAT bus stops” 返回的是密歇根的同名图层，改为数据源白名单</li>
+        <li><b>PDF 表格列错位</b>：规则表“最大层数”抽出 “-4”，加列数与值域校验，可疑值标为“待核实”</li>
+        <li><b>跨源冲突</b>：同一宗地 FEMA 判为 X 区，宗地字段却写 FZONE=YES，两边都列出并降低置信度</li>
+        <li><b>级联误差</b>：地理编码点偏离 107–378 米，改为按地址反查宗地，偏差大时禁止空间推断</li>
+      </ul>
+      <p><a href="https://github.com/xg366-source/site-research-agent/blob/master/FAILURE_MODES.md" target="_blank" rel="noopener" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">阅读完整失败模式清单 →</a></p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">评测与迭代</div>
+    <div class="cblock__body">
+      <p>评测集 19 个场景：7 个自然问题、9 个故障注入（超时、429 限流、PDF 列错位、规划器输出非法 JSON、回答里插入伪造引用、预算上限等）、2 个一致性复跑、1 个无 LLM 基线。三轮迭代：</p>
+      <ul>
+        <li><b>v1</b>：8 / 19 场景全部通过。发现跨分区宗地只解析了一个分区；预算熔断事后才检查，实际花费是上限的 22 倍</li>
+        <li><b>v2</b>：18 / 19。唯一的失败追查下去，是公交工具一直在报错，被兜底异常处理吞掉了，回答里悄悄少了一块。之后异常一律生成证据，评测加一项“无静默工具异常”</li>
+        <li><b>v3</b>：19 / 19，74 / 74 项检查。危险错误（证据未核实却给出“安全 / 可行”）0 / 19</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">成本统计</div>
+    <div class="cblock__body">
+      <p>每个步骤单独计量 token、HTTP 次数、耗时和美元成本；每次调用模型前按最坏情况预留预算，不够就不调用，直接输出证据清单。v3 结果：完整回答中位成本 $0.043、约 22 秒；19 次总计 $0.585。</p>
+      <p>一个反直觉的发现：<b>94% 的成本和 77% 的耗时来自最后的回答合成</b>，工具调用几乎不花钱。护栏在非注入运行中拦截了 3 条，全部是误报，每次重写让成本接近翻倍。所以我把护栏当成一个分类器来评估精确率和成本，把真实误报加进护栏测试，修复后该场景成本从 $0.082 降到 $0.043。</p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">局限与下一步</div>
+    <div class="cblock__body">
+      <ul>
+        <li>评测集太小：19 个场景只能证明机制有效，不能证明真实流量下的准确率。下一步收集 100 个以上真实问题，请规划师标注答案</li>
+        <li>只覆盖一个城市，换城市需要重新适配数据源</li>
+        <li>“咖啡馆”这类说法到条例用途分类的映射、提示注入防护都还没做</li>
+      </ul>
+      <p><a href="https://site-research-agent.pplx.app" target="_blank" rel="noopener" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">打开在线展示（调用链回放 / 失败模式 / 成本）→</a>　<a href="https://github.com/xg366-source/site-research-agent" target="_blank" rel="noopener" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">GitHub 查看代码 →</a></p>
+    </div>
+  </div>
+
+  <div class="cblock reveal">
+    <div class="cblock__label">我的角色与复盘</div>
+    <div class="cblock__body">
+      <p>独立完成：问题范围、工具与降级设计、护栏、评测场景、成本核算和展示页。最大的收获是：Agent 的产品质量主要不在“回答得多好”，而在边界——什么时候停止、什么时候说“未能核实”、为一次重写多花多少钱值不值。容错和可观测必须一起做，否则兜底逻辑会把缺陷藏起来。</p>
+    </div>
+  </div>
+
+</section>
+
+<section class="gallery">
+  <figure class="figure reveal">
+    <div class="figure__img"><img src="../assets/images/agent-replay.jpg" alt="调用链回放：选择场景，查看回答、调用链与证据" loading="lazy"></div>
+    <figcaption class="figure__cap">调用链回放：19 次真实运行，每次可查看回答、每步工具调用和证据（<a href="https://site-research-agent.pplx.app" target="_blank" rel="noopener">在线查看</a>）</figcaption>
+  </figure>
+  <figure class="figure reveal">
+    <div class="figure__img"><img src="../assets/images/agent-catalog.jpg" alt="失败模式清单：按层和严重度筛选" loading="lazy"></div>
+    <figcaption class="figure__cap">失败模式清单：27 类，按层与严重度筛选，右侧为 v3 评测中的触发次数</figcaption>
+  </figure>
+  <figure class="figure reveal">
+    <div class="figure__img"><img src="../assets/images/agent-cost.jpg" alt="成本统计：成本构成与每次运行成本" loading="lazy"></div>
+    <figcaption class="figure__cap">成本统计：回答合成占 94%，工具调用几乎不花钱</figcaption>
+  </figure>
+</section>
+
+<nav class="p-nav">
+  <a class="p-nav__item" href="../index.html#cases"><span>全部案例</span>← 返回作品集</a>
+  <a class="p-nav__item" href="ai-portfolio-reviewer.html"><span>下一个 · 案例 02</span>AI 作品集点评助手 →</a>
+</nav>
+
+<footer class="footer">
+  <span>© <span data-year>2026</span> 耿想</span>
+  <span>AI 产品经理作品集</span>
+</footer>
+
+<button class="to-top" aria-label="回到顶部">↑</button>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

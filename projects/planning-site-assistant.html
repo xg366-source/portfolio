@@ -22,7 +22,7 @@
 </nav>
 
 <header class="p-hero">
-  <div class="p-hero__num reveal">案例 02 · AI 工程</div>
+  <div class="p-hero__num reveal">案例 03 · RAG（场地调研 Agent 的第一版）</div>
   <h1 class="p-hero__title reveal">规划资料与场地分析助手</h1>
   <p class="p-hero__sub reveal">查基地资料不用再翻几十份 PDF：问答带引用、没依据就拒答、数字不让模型猜——而且效果用测试集说话，不凭感觉。</p>
   <div class="p-hero__facts reveal">
@@ -101,7 +101,8 @@
     <div class="cblock__body">
       <p>系统已在本地完整跑通：命令行演示、5 个核心行为测试、评估脚本、地图界面与 API 均验证可用。代码与数据清单公开在本站仓库：<a href="https://github.com/xg366-source/portfolio/tree/main/planning-site-assistant" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">GitHub 查看代码 →</a></p>
       <p><b>在线演示已上线（零服务器、零 API key，全部在浏览器本地运行）</b>：<a href="../planning-site-assistant/demo/" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">打开网页版问答演示 →</a>——地图 + 问答，网页版引擎经 40 题评估集验证，与 Python 版结论逐题一致。</p>
-      <p>下一步：稠密 embedding 对照与 LLM 生成模式对照（提示词已按“有引才答、无据拒答”写好，待 API Key）；语料扩大后重跑全部对照实验——小语料下的结论不外推。</p>
+      <p>后续：这条线已演进为第二版 <a href="site-research-agent.html" style="color:var(--moss-dark);font-weight:600;border-bottom:1px solid var(--moss);">场地调研 Agent →</a>——从固定资料检索，改为由 Agent 调用真实 GIS 与规划服务，重点做失败处理与成本核算。</p>
+      <p>本项目的遗留项：稠密 embedding 对照与 LLM 生成模式对照（提示词已按“有引才答、无据拒答”写好，待 API Key）；语料扩大后重跑全部对照实验——小语料下的结论不外推。</p>
     </div>
   </div>
 
@@ -115,13 +116,13 @@
 </section>
 
 <nav class="p-nav">
-  <a class="p-nav__item" href="ai-portfolio-reviewer.html"><span>上一个 · 案例 01</span>← AI 作品集点评助手</a>
-  <a class="p-nav__item" href="conflux-strand.html"><span>下一个 · 案例 03</span>Conflux Strand →</a>
+  <a class="p-nav__item" href="ai-portfolio-reviewer.html"><span>上一个 · 案例 02</span>← AI 作品集点评助手</a>
+  <a class="p-nav__item" href="conflux-strand.html"><span>下一个 · 案例 04</span>Conflux Strand →</a>
 </nav>
 
 <footer class="footer">
   <span>© <span data-year>2026</span> 耿想</span>
-  <span>AI 产品 · 用户研究作品集</span>
+  <span>AI 产品经理作品集</span>
 </footer>
 
 <button class="to-top" aria-label="回到顶部">↑</button>
