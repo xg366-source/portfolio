@@ -59,7 +59,7 @@
     <span><strong>6</strong> 场真实用户访谈 · 导出 P0 产品决策</span>
     <span><strong>2</strong> 个可运行的 AI 产品（已上线 / 本地可复现）</span>
     <span><strong>113</strong> 个 census tract 的 GIS 数据管线</span>
-    <span><strong>12</strong> 题种子评估集全过（扩至 40 题中）</span>
+    <span><strong>40</strong> 题评估集全过 + BM25/TF-IDF 对照</span>
   </section>
 
   <section class="section" id="cases">
@@ -94,7 +94,7 @@
             <span class="tag">独立完成</span>
           </div>
           <h3 class="case__name"><a href="projects/planning-site-assistant.html">规划资料与场地分析助手</a></h3>
-          <p class="case__desc">把规划文件和 GIS 数据建成可检索资料库：回答基地问题时给出引用来源（文件·章节 / 图层·GEOID），没有依据就明确拒答；数字类问题走结构化 GIS 查询、不让模型猜数。用一组有标准答案的测试题评估引用正确性、检索相关性和拒答能力，并公开失败案例——种子集 12 题已跑通，Recall@5 与拒答准确率均为 1.0（题量有限，扩至 40 题中）。</p>
+          <p class="case__desc">把规划文件和 GIS 数据建成可检索资料库：回答基地问题时给出引用来源（文件·章节 / 图层·GEOID），没有依据就明确拒答；数字类问题走结构化 GIS 查询、不让模型猜数。用一组有标准答案的测试题评估引用正确性、检索相关性和拒答能力，并公开失败案例——40 题评估集全过，Recall@5 与拒答准确率均为 1.0；BM25 与 TF-IDF 向量检索对照打平，结论是保留 BM25（详见案例页选型分析）。</p>
           <a class="case__link" href="projects/planning-site-assistant.html">查看完整案例 →</a>
         </div>
       </div>

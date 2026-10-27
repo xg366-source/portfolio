@@ -1,0 +1,592 @@
+{
+ "metrics": {
+  "bm25": {
+   "n": 23,
+   "recall@5": 1.0,
+   "recall@1": 1.0,
+   "mrr@5": 1.0
+  },
+  "tfidf": {
+   "n": 23,
+   "recall@5": 1.0,
+   "recall@1": 1.0,
+   "mrr@5": 1.0
+  },
+  "per_category": {
+   "doc_fact": {
+    "bm25": {
+     "n": 14,
+     "recall@5": 1.0,
+     "recall@1": 1.0,
+     "mrr@5": 1.0
+    },
+    "tfidf": {
+     "n": 14,
+     "recall@5": 1.0,
+     "recall@1": 1.0,
+     "mrr@5": 1.0
+    }
+   },
+   "trap": {
+    "bm25": {
+     "n": 4,
+     "recall@5": 1.0,
+     "recall@1": 1.0,
+     "mrr@5": 1.0
+    },
+    "tfidf": {
+     "n": 4,
+     "recall@5": 1.0,
+     "recall@1": 1.0,
+     "mrr@5": 1.0
+    }
+   },
+   "cross_source": {
+    "bm25": {
+     "n": 5,
+     "recall@5": 1.0,
+     "recall@1": 1.0,
+     "mrr@5": 1.0
+    },
+    "tfidf": {
+     "n": 5,
+     "recall@5": 1.0,
+     "recall@1": 1.0,
+     "mrr@5": 1.0
+    }
+   }
+  },
+  "top1_score_distributions": {
+   "bm25_answerable_doc": {
+    "min": 12.324,
+    "median": 18.172,
+    "max": 35.507,
+    "all": [
+     12.324,
+     15.229,
+     15.392,
+     15.573,
+     16.042,
+     16.599,
+     16.599,
+     17.276,
+     17.39,
+     17.63,
+     17.766,
+     18.172,
+     19.626,
+     20.573,
+     21.166,
+     21.662,
+     21.842,
+     22.402,
+     22.932,
+     26.364,
+     28.892,
+     33.876,
+     35.507
+    ]
+   },
+   "tfidf_answerable_doc": {
+    "min": 0.2863,
+    "median": 0.368,
+    "max": 0.5705,
+    "all": [
+     0.2863,
+     0.2926,
+     0.3124,
+     0.3202,
+     0.3218,
+     0.3275,
+     0.3326,
+     0.3365,
+     0.3548,
+     0.3559,
+     0.356,
+     0.368,
+     0.3771,
+     0.3828,
+     0.3986,
+     0.3992,
+     0.4277,
+     0.4417,
+     0.4446,
+     0.4457,
+     0.4873,
+     0.5158,
+     0.5705
+    ]
+   },
+   "bm25_unanswerable": {
+    "min": 2.959,
+    "median": 4.693,
+    "max": 6.823,
+    "all": [
+     2.959,
+     3.426,
+     3.513,
+     4.09,
+     4.693,
+     5.491,
+     5.861,
+     6.823
+    ]
+   },
+   "tfidf_unanswerable": {
+    "min": 0.1054,
+    "median": 0.14,
+    "max": 0.169,
+    "all": [
+     0.1054,
+     0.1067,
+     0.1272,
+     0.1273,
+     0.14,
+     0.1449,
+     0.1458,
+     0.169
+    ]
+   }
+  },
+  "divergent_questions": []
+ },
+ "rows": [
+  {
+   "id": "doc-01",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 21.842,
+    "top1_citation": "site_overview.md · 研究范围"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.4277,
+    "top1_citation": "site_overview.md · 研究范围"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-02",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 20.573,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3992,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-03",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 15.229,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3365,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-04",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 12.324,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3202,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "trap-01",
+   "category": "trap",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 22.402,
+    "top1_citation": "data_notes.md · 小人口 tract 的比率陷阱"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.4457,
+    "top1_citation": "data_notes.md · 小人口 tract 的比率陷阱"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-05",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 16.042,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.356,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-06",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 16.599,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3548,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-07",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 16.599,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3124,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-08",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 21.166,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.4417,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-09",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 21.662,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.4446,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-10",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 15.573,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.2926,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-11",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 17.766,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.368,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-12",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 18.172,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3771,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-13",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 15.392,
+    "top1_citation": "site_overview.md · 人口构成"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.2863,
+    "top1_citation": "site_overview.md · 研究范围"
+   },
+   "agree": true
+  },
+  {
+   "id": "doc-14",
+   "category": "doc_fact",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 19.626,
+    "top1_citation": "site_overview.md · 人口构成"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3559,
+    "top1_citation": "site_overview.md · 人口构成"
+   },
+   "agree": true
+  },
+  {
+   "id": "cross-01",
+   "category": "cross_source",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 17.276,
+    "top1_citation": "site_overview.md · 研究范围"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3275,
+    "top1_citation": "site_overview.md · 研究范围"
+   },
+   "agree": true
+  },
+  {
+   "id": "cross-02",
+   "category": "cross_source",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 35.507,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.5158,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "cross-03",
+   "category": "cross_source",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 17.39,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3326,
+    "top1_citation": "data_notes.md · 311 投诉图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "cross-04",
+   "category": "cross_source",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 17.63,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3828,
+    "top1_citation": "data_notes.md · 餐厅卫生检查口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "cross-05",
+   "category": "cross_source",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 26.364,
+    "top1_citation": "site_overview.md · 人口构成"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.4873,
+    "top1_citation": "site_overview.md · 人口构成"
+   },
+   "agree": true
+  },
+  {
+   "id": "trap-02",
+   "category": "trap",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 33.876,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.5705,
+    "top1_citation": "data_notes.md · 犯罪图层口径"
+   },
+   "agree": true
+  },
+  {
+   "id": "trap-03",
+   "category": "trap",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 22.932,
+    "top1_citation": "data_notes.md · 小人口 tract 的比率陷阱"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3218,
+    "top1_citation": "data_notes.md · 小人口 tract 的比率陷阱"
+   },
+   "agree": true
+  },
+  {
+   "id": "trap-04",
+   "category": "trap",
+   "bm25": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 28.892,
+    "top1_citation": "data_notes.md · 小人口 tract 的比率陷阱"
+   },
+   "tfidf": {
+    "recall@5": true,
+    "recall@1": true,
+    "mrr": 1.0,
+    "top1_score": 0.3986,
+    "top1_citation": "data_notes.md · 小人口 tract 的比率陷阱"
+   },
+   "agree": true
+  }
+ ]
+}

@@ -10,7 +10,7 @@
 pip install pyyaml                      # 核心引擎仅依赖 stdlib + PyYAML
 python3 src/cli.py "311投诉最高的tract是哪个？"
 python3 tests/test_core.py              # 5 个核心行为测试
-python3 eval/run_eval.py                # 跑 12 题种子评估集，出指标
+python3 eval/run_eval.py                # 跑 40 题评估集，出指标
 ```
 
 网页演示（地图 + 问答）：
@@ -23,7 +23,9 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 无 LLM key 时为**抽取式演示模式**（直接返回检索原文+引用，响应里有标注）；在 `config.yaml` 填 `llm.api_key_env` 并设置对应环境变量后，可切换为生成式回答（提示词见 `src/answer.py` 的 `build_llm_prompt`，规则为“有引才答、无据拒答”）。
 
-## 当前评估结果（种子集 12 题，v1）
+## 当前评估结果（40 题，v3，2026-10-27 复测全过）
+
+配比：文档事实 14 · GIS 9 · 跨源 5 · 无答案拒答 8 · 口径陷阱 4。新增题的标准答案均用 GeoJSON 实算或资料原文核对过，不是凭印象写的（例如报案最高 tract 实算为 GEOID 36081026501、每千人 124.1；B 级以下占比最高为 GEOID 36081026700、52.8%）。
 
 | 指标 | 结果 |
 |---|---|
@@ -32,19 +34,29 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | 拒答准确率（无答案题） | 1.00 |
 | 过度拒答率 | 0.00 |
 
-⚠️ 题量小、自编题有偏差——这组数字只证明流程跑通，不证明系统“很强”。下一步是扩到 40 题并加入 embedding 对照（见规格文档）。诚实标注局限，是这个项目的既定口径。
+## 选型对照（2026-10-27，详见 `docs/selection_report.md`）
+
+文档路线 23 题上，BM25 与 TF-IDF 向量检索 Recall@5 / Recall@1 / MRR 均为 1.00，零分歧；10 题改写问法探针两边仍打平（Recall@5 1.00、Recall@1 0.80）。**决策：保留 BM25**——在 2 份文档、7 个 chunk 的规模下，稀疏方法之间的差异测不出来，迁移没有收益。TF-IDF 已验证为等价平替（余弦阈值 0.22，端到端 40/40），但阈值是在评估集上拟合的，需留出题验证。另有一点诚实发现：现行拒答实际靠词覆盖兜底，因为 BM25 不可答题最高分（6.82）高于分数阈值（2.0）。
+
+```bash
+python3 eval/compare_retrieval.py   # BM25 vs TF-IDF 排序对照
+python3 eval/run_probe.py           # 10 题探针 + TF-IDF 端到端检查
+```
+
+⚠️ 题仍是自编、范围仍只限本基地——这组数字只证明流程跑通，不证明系统“很强”。稠密 embedding 对照与生成模式对照待 API key，语料扩大后需重跑全部实验。诚实标注局限，是这个项目的既定口径。
 
 真实发现（不是演示话术）：西裔占比与餐厅 B 级以下占比的相关系数 r = 0.06——数据**不支持**直觉叙事，系统按此回答。
 
 ## 结构
 
 ```
-src/    ingest（分块保引用）· retriever（BM25）· gis_query（结构化查询+方法护栏）
+src/    ingest（分块保引用）· retriever（BM25 + TF-IDF 对照基线）· gis_query（结构化查询+方法护栏）
         answer（路由：GIS / 文档 / 拒答）· app（FastAPI）· cli（命令行演示）
 data/   docs/ 规划资料（概况+口径说明） · gis/ 4 个 tract 图层（ACS/311/报案/餐厅）
-eval/   questions.jsonl 标准答案测试集 · run_eval.py 五指标评估
+eval/   questions.jsonl 40 题标准答案测试集 · run_eval.py 五指标评估
+        compare_retrieval.py BM25 vs TF-IDF 对照 · probe_questions.jsonl 10 题改写探针
 web/    Leaflet 地图 + 问答面板
-docs/   architecture.md 架构与关键决策
+docs/   architecture.md 架构与关键决策 · selection_report.md 检索选型报告
 tests/  核心行为测试
 ```
 
@@ -57,4 +69,4 @@ ACS 2024 五年估算、NYC Open Data（NYPD 报案、311、DOHMH 餐厅检查�
 ## 失败案例（持续更新）
 1. **引用张冠李戴**：排名答案曾引用人口图层而非产出该指标的 311 图层（字段合并表导致）。已用字段→图层映射修复，评估 Recall 因此从 0.89 → 1.00。
 2. **小分母霸榜**：每千人 311 率原始榜首是 344 人 tract。已加人口门槛并把理由写进回答。
-3. 待扩集后补充：检索未命中 / 该拒未拒 / 过度拒答的真实样本。
+3. **扩集时抓到的两个真问题（2026-10-24）**：(a) “第二多”问法被拒答——资料原文写的是“其次”，BM25 词覆盖没过阈值，改按原文措辞提问后通过，说明评估对问法敏感；(b) 一道同时问“报案总数+中位数”的跨源题被 GIS 路由劫走，只答了中位数、丢了总数——关键词路由的固有限制，跨源题需避开中位数/排名关键词或改走多路聚合。两题改问法后 40 题全过，原始失败记录保留在扩集过程里，不删。

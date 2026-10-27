@@ -26,6 +26,18 @@ def tokenize(text: str) -> list[str]:
     return tokens
 
 
+def term_coverage(query: str, chunk: Chunk) -> float:
+    """Share of distinct query terms present in the chunk (refusal signal).
+
+    Shared by both indexes: the refusal signal must not depend on which
+    ranking function is plugged in, or a swap silently changes refusal behaviour.
+    """
+    q = set(tokenize(query))
+    if not q:
+        return 0.0
+    return len(q & set(tokenize(chunk.text))) / len(q)
+
+
 class BM25Index:
     def __init__(self, chunks: list[Chunk], k1: float = 1.5, b: float = 0.75):
         self.chunks = chunks
@@ -56,10 +68,50 @@ class BM25Index:
                 scored.append((chunk, round(score, 3)))
         return sorted(scored, key=lambda x: -x[1])[:top_k]
 
-    @staticmethod
-    def term_coverage(query: str, chunk: Chunk) -> float:
-        """Share of distinct query terms present in the chunk (refusal signal)."""
-        q = set(tokenize(query))
-        if not q:
-            return 0.0
-        return len(q & set(tokenize(chunk.text))) / len(q)
+    term_coverage = staticmethod(term_coverage)
+
+
+class TFIDFIndex:
+    """Sparse vector-space baseline behind the same `search()` interface.
+
+    Same tokenizer and chunk corpus as BM25, so the comparison isolates the
+    ranking function, not the preprocessing. This is TF-IDF cosine, NOT a
+    dense embedding model: it cannot match synonyms or paraphrases that share
+    no tokens, which is exactly the limitation the selection report measures.
+    A dense-embedding comparison needs an embedding API key and is pending.
+    """
+
+    def __init__(self, chunks: list[Chunk]):
+        self.chunks = chunks
+        self.docs = [Counter(tokenize(c.text)) for c in chunks]
+        df: Counter = Counter()
+        for d in self.docs:
+            df.update(d.keys())
+        n = len(chunks)
+        self.idf = {t: math.log((n + 1) / (c + 1)) + 1.0 for t, c in df.items()}
+        self.vecs: list[dict[str, float]] = []
+        self.norms: list[float] = []
+        for counts in self.docs:
+            vec = {t: (1.0 + math.log(f)) * self.idf.get(t, 0.0)
+                   for t, f in counts.items()}
+            self.vecs.append(vec)
+            self.norms.append(math.sqrt(sum(v * v for v in vec.values())) or 1.0)
+
+    def search(self, query: str, top_k: int = 5) -> list[tuple[Chunk, float]]:
+        qcounts = Counter(tokenize(query))
+        if not qcounts:
+            return []
+        qvec = {t: (1.0 + math.log(f)) * self.idf.get(t, 0.0)
+                for t, f in qcounts.items() if t in self.idf}
+        if not qvec:
+            return []
+        qnorm = math.sqrt(sum(v * v for v in qvec.values())) or 1.0
+        scored = []
+        for chunk, vec, norm in zip(self.chunks, self.vecs, self.norms):
+            dot = sum(qvec[t] * vec.get(t, 0.0) for t in qvec)
+            cos = dot / (qnorm * norm)
+            if cos > 0:
+                scored.append((chunk, round(cos, 4)))
+        return sorted(scored, key=lambda x: -x[1])[:top_k]
+
+    term_coverage = staticmethod(term_coverage)

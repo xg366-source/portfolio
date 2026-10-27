@@ -10,3 +10,31 @@
 {"id": "ref-02", "category": "refusal", "question": "上海静安区的人口密度是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
 {"id": "ref-03", "category": "refusal", "question": "2030 年该走廊的规划人口目标是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
 {"id": "trap-01", "category": "trap", "question": "为什么小人口 tract 的每千人比率排名不可靠？", "expected_answer": "分母太小会放大比率；本项目排名设人口≥2000 门槛", "expected_source": "data_notes", "answerable": true, "must_contain": "分母"}
+{"id": "doc-05", "category": "doc_fact", "question": "311投诉其次最多的类型是什么？有多少起？", "expected_answer": "堵车道 Blocked Driveway，10,258 起", "expected_source": "data_notes", "answerable": true, "must_contain": "10,258"}
+{"id": "doc-06", "category": "doc_fact", "question": "311投诉中住宅噪音有多少起？", "expected_answer": "7,118 起", "expected_source": "data_notes", "answerable": true, "must_contain": "7,118"}
+{"id": "doc-07", "category": "doc_fact", "question": "311投诉中暖气热水问题有多少起？", "expected_answer": "5,695 起", "expected_source": "data_notes", "answerable": true, "must_contain": "5,695"}
+{"id": "doc-08", "category": "doc_fact", "question": "2026年1-7月报案中重罪有多少起？", "expected_answer": "3,485 起", "expected_source": "data_notes", "answerable": true, "must_contain": "3,485"}
+{"id": "doc-09", "category": "doc_fact", "question": "2026年1-7月报案中轻罪有多少起？", "expected_answer": "5,784 起", "expected_source": "data_notes", "answerable": true, "must_contain": "5,784"}
+{"id": "doc-10", "category": "doc_fact", "question": "餐厅卫生检查范围内共有多少家餐厅？", "expected_answer": "1,247 家", "expected_source": "data_notes", "answerable": true, "must_contain": "1,247"}
+{"id": "doc-11", "category": "doc_fact", "question": "餐厅卫生评级为A级的餐厅有多少家？", "expected_answer": "791 家", "expected_source": "data_notes", "answerable": true, "must_contain": "791"}
+{"id": "doc-12", "category": "doc_fact", "question": "餐厅卫生评级为B级的餐厅有多少家？", "expected_answer": "109 家", "expected_source": "data_notes", "answerable": true, "must_contain": "109"}
+{"id": "doc-13", "category": "doc_fact", "question": "研究范围内亚裔人口是多少？占比多少？", "expected_answer": "110,309 人，27.9%", "expected_source": "site_overview", "answerable": true, "must_contain": "110,309"}
+{"id": "doc-14", "category": "doc_fact", "question": "研究范围内西裔人口是多少？占比多少？", "expected_answer": "192,232 人，48.5%", "expected_source": "site_overview", "answerable": true, "must_contain": "192,232"}
+{"id": "gis-05", "category": "gis_rank", "question": "报案数每千人最高的tract是哪个？", "expected_answer": "人口≥2000 的 tract 中 GEOID 36081026501，每千人 124.1 起", "expected_source": "crime_by_tract_2026ytd.geojson", "answerable": true, "must_contain": "36081026501"}
+{"id": "gis-06", "category": "gis_rank", "question": "西裔占比最高的tract是哪个？", "expected_answer": "人口≥2000 的 tract 中 GEOID 36081046500，西裔占比 93.7%", "expected_source": "36081046500", "answerable": true, "must_contain": "36081046500"}
+{"id": "gis-07", "category": "gis_rank", "question": "餐厅B级以下占比最高的tract是哪个？", "expected_answer": "人口≥2000 且餐厅数≥10 的 tract 中 GEOID 36081026700，52.8%", "expected_source": "food_safety_by_tract.geojson", "answerable": true, "must_contain": "36081026700"}
+{"id": "gis-08", "category": "gis_median", "question": "311投诉每千人中位数是多少？", "expected_answer": "201.8 起/千人", "expected_source": "311_by_tract_2026ytd.geojson", "answerable": true, "must_contain": "201.8"}
+{"id": "gis-09", "category": "gis_profile", "question": "tract 36081028500 的人口和西裔占比是多少？", "expected_answer": "总人口 4811，西裔占比 36.3%", "expected_source": "36081028500", "answerable": true, "must_contain": "4811"}
+{"id": "cross-01", "category": "cross_source", "question": "研究范围总人口和西裔占比各是多少？", "expected_answer": "总人口 396,050，西裔占比 48.5%", "expected_source": "site_overview", "answerable": true, "must_contain": "396,050"}
+{"id": "cross-02", "category": "cross_source", "question": "2026年1-7月报案记录共多少起？其中重罪、轻罪、违规各多少？", "expected_answer": "10,714 起；重罪 3,485、轻罪 5,784、违规 1,445", "expected_source": "data_notes", "answerable": true, "must_contain": "10,714"}
+{"id": "cross-03", "category": "cross_source", "question": "311投诉总数和最集中的类型各是多少？", "expected_answer": "89,764 起，最多为违停 18,220 起", "expected_source": "data_notes", "answerable": true, "must_contain": "89,764"}
+{"id": "cross-04", "category": "cross_source", "question": "餐厅检查总数、A级数量和A级分数标准各是多少？", "expected_answer": "1,247 家，A级 791 家，A级 ≤13 分", "expected_source": "data_notes", "answerable": true, "must_contain": "1,247"}
+{"id": "cross-05", "category": "cross_source", "question": "东部Corona西裔占比和向西Woodside占比各是多少？", "expected_answer": "东部 Corona 70%-90%，向西 Woodside 约 20%", "expected_source": "site_overview", "answerable": true, "must_contain": "70%"}
+{"id": "ref-04", "category": "refusal", "question": "这个基地附近最便宜的租房月租是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "ref-05", "category": "refusal", "question": "该走廊2035年地铁新线开通时间是什么时候？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "ref-06", "category": "refusal", "question": "附近小学的评分是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "ref-07", "category": "refusal", "question": "明天这个区域的天气怎么样？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "ref-08", "category": "refusal", "question": "某个具体地块的容积率是多少？", "expected_answer": "", "expected_source": "", "answerable": false}
+{"id": "trap-02", "category": "trap", "question": "为什么报案数不能直接说成犯罪率？", "expected_answer": "这是报案数，不是定罪数，不能直接表述为犯罪率", "expected_source": "data_notes", "answerable": true, "must_contain": "定罪"}
+{"id": "trap-03", "category": "trap", "question": "餐厅B级以下占比排名为什么要求餐厅数不少于10家？", "expected_answer": "餐厅数太少时占比不稳定；本项目餐厅占比另要求餐厅数 ≥10", "expected_source": "data_notes", "answerable": true, "must_contain": "≥10"}
+{"id": "trap-04", "category": "trap", "question": "为什么人口只有344人的tract不能直接按每千人比率排第一？", "expected_answer": "分母太小会放大比率；本项目排名设人口≥2000 门槛", "expected_source": "data_notes", "answerable": true, "must_contain": "344"}

@@ -108,6 +108,248 @@
    "recall_hit": true,
    "contains_ok": true,
    "verdict": "PASS"
+  },
+  {
+   "id": "doc-05",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-06",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-07",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-08",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-09",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-10",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-11",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-12",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-13",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "doc-14",
+   "category": "doc_fact",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-05",
+   "category": "gis_rank",
+   "refused": false,
+   "route": "gis_rank",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-06",
+   "category": "gis_rank",
+   "refused": false,
+   "route": "gis_rank",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-07",
+   "category": "gis_rank",
+   "refused": false,
+   "route": "gis_rank",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-08",
+   "category": "gis_median",
+   "refused": false,
+   "route": "gis_median",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "gis-09",
+   "category": "gis_profile",
+   "refused": false,
+   "route": "gis_profile",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "cross-01",
+   "category": "cross_source",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "cross-02",
+   "category": "cross_source",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "cross-03",
+   "category": "cross_source",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "cross-04",
+   "category": "cross_source",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "cross-05",
+   "category": "cross_source",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-04",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-05",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-06",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-07",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "ref-08",
+   "category": "refusal",
+   "refused": true,
+   "route": "refusal",
+   "verdict": "PASS"
+  },
+  {
+   "id": "trap-02",
+   "category": "trap",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "trap-03",
+   "category": "trap",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
+  },
+  {
+   "id": "trap-04",
+   "category": "trap",
+   "refused": false,
+   "route": "docs",
+   "recall_hit": true,
+   "contains_ok": true,
+   "verdict": "PASS"
   }
  ]
 }
